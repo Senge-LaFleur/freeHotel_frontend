@@ -1,13 +1,14 @@
-import { useState } from 'react'
+import React from 'react';
+import Header from './components/header/header'
+//import Home from './pages/home/home.jsx'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <>
-      <h1>Hello</h1>
-    </>
+    <div class="body">
+      <Header />
+    </div>
   )
 }
 

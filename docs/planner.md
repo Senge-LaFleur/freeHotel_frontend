@@ -26,7 +26,7 @@ Sprint Backlog 1
 1. Frontend
     - Hotel search home page
     - Authentification
-    - Finish templates
+    - Finish templates ()
 
 
 

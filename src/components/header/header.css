@@ -1,0 +1,122 @@
+:root{
+    --black: #333;
+    --light-grey: #767268;
+    --extra-light: #eee;
+    --white: #fefefe;
+    --yellow: #ffdd00;
+    --blue: #0b3e66;
+    --box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.header-image-container{
+    position: relative;
+    min-height: 500px;
+    background-image: linear-gradient(to right, rgba(44,56,85,.9), rgba(100,125,187,.1)),
+    url('../../assets/images/outside9.jpg');
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.header-content{
+    max-width: 600px;
+    padding: 5rem 2rem;
+}
+
+.header-content h1{
+    margin-bottom: 1rem;
+    font-size: 3.5rem;
+    line-height: 4rem;
+    font-weight: 600;
+    color: var(--white);
+}
+
+.header-content p{
+    color: var(--extra-light);
+}
+
+.booking-container{
+    position: absolute;
+    bottom: -5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 1rem);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 3rem 2rem;
+    border-radius: 2rem;
+    background-color: rgba(255,255,255,0.7);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--box-shadow);
+}
+
+.booking-container form{
+    width: 100%;
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1rem;
+}
+
+.booking-container .input-group{
+    width: 100%;
+    position: relative;
+}
+
+.booking-container label{
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--black);
+    pointer-events: none;
+    transition: 0.3s;
+}
+
+.booking-container input{
+    width: 100%;
+    padding: 10px 0;
+    font-size: 1.2rem;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    border-bottom: 1px solid var(--blue);
+    color: var(--black);
+}
+
+.booking-container input:focus ~ label {
+    font-size: 0.8rem;
+    top: 0;
+}
+
+.booking-container .form-group p{
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--light-grey);
+}
+
+.booking-container .btn{
+    width: 40%;
+    height: 60%;
+    padding: 1rem;
+    padding-top: .8rem;
+    margin: 1rem;
+    outline: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--white);
+    background-color: var(--blue);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s
+}
+
+.booking-container .btn:hover{
+    background-color: var(--yellow);
+    color: var(--blue);
+}
+
