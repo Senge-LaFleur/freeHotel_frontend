@@ -5,6 +5,7 @@
     --white: #fefefe;
     --yellow: #ffdd00;
     --blue: #0b3e66;
+    --light-blue: #187fcd;
     --box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
@@ -100,23 +101,34 @@
 }
 
 .booking-container .btn{
-    width: 40%;
-    height: 60%;
-    padding: 1rem;
-    padding-top: .8rem;
-    margin: 1rem;
-    outline: none;
-    border: none;
-    font-size: 1.5rem;
-    color: var(--white);
-    background-color: var(--blue);
-    border-radius: 50%;
-    cursor: pointer;
-    transition: 0.3s
+    background: none;
+    color: var(--blue);
+    border: 2px solid var(--blue);
 }
 
 .booking-container .btn:hover{
-    background-color: var(--yellow);
-    color: var(--blue);
+    background-color: var(--blue);
+    color: var(--white);
+}
+
+
+
+@media(max-width: 768px){
+    .header-content{
+        max-width: 600px;
+        padding: 5rem 2rem;
+    }
+    
+    .header-content h1{
+        margin-bottom: 1rem;
+        font-size: 2.5rem;
+        line-height: 3rem;
+        font-weight: 600;
+        color: var(--white);
+    }
+
+    .booking-container form{
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 

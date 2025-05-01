@@ -18,22 +18,23 @@ function Navbar(){
 
     return(
         <div class="head"> 
-            <nav class="navbar">
-                <div class="logo">
-                    {/* <FontAwesomeIcon icon={['fas', 'fa-hotel']} /> */}
-                    <span> FreeHotel</span>
+            <nav>
+                <div class="navbar">
+                    <div class="logo">
+                        <FontAwesomeIcon icon={['fas', 'fa-hotel']} />
+                        <span>FreeHotel</span>
+                    </div>
+                    <div class="menu-bar" id="menu-bar" onClick={toggleMenu}>
+                        <FontAwesomeIcon icon={isOpen ? ['fas', 'fa-times'] : ['fas', 'fa-bars']} />
+                    </div>
                 </div>
-                {/* <div class="menu-bar" id="menu-bar" onClick={toggleMenu}>
-                    <FontAwesomeIcon icon={isOpen ? ['fas', 'fa-times'] : ['fas', 'fa-bars']} />
-                </div> */}
-                <ul class="nav-links">
+                
+                <ul id="nav-links" class={`nav-links ${isOpen ? 'open' : ''}`} onClick={closeMenu}>
                     <li class="link"><Link to="/" class="nav-link">Home</Link></li>
                     <li class="link"><Link to="/hotels" class="nav-link">Hotels</Link></li>
                     <li class="link"><Link to="/login" class="nav-link">Login</Link></li>
                     <li class="link"><Link to="/contact" class="nav-link">Contact</Link></li>
-                </ul>
-                {/* <Link to="/rooms" class="btn">Book A Room</Link> */}
-                
+                </ul>  
             </nav>            
         </div>
     )

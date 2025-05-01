@@ -5,36 +5,133 @@
     --extra-light: #eee;
     --yellow: #ffd000;
     --blue: #0b3e66;
+    --light-blue: #187fcd;
+    --max-width: 1200px;
     --box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 nav{
+    position: fixed;
+    isolation: isolate;
+    top: 0%;
+    width: 100%;
+    max-width: var(--max-width);
     margin: auto;
-    padding: 1rem 1rem;
+    z-index: 9;
+}
+
+.navbar{
+    padding: 1rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 2rem;
+    background-color: var(--blue);
 }
 
 .logo{
     font-size: 1.5rem;
     font-weight: 600;
-    color: var(--black);
+    color: var(--white);
+}
+
+.fa-hotel{
+    font-size: 1.5rem;
+}
+
+.menu-bar{
+    font-size: 1.5rem;
+    color: var(--white);
+    cursor: pointer;
 }
 
 .nav-links{
     list-style: none;
+    position: absolute;
+    width: 100%;
+    padding: 2rem;
     display: flex;
     align-items: center;
+    flex-direction: column;
     gap: 2rem;
+    background-color: rgba(11, 62, 102, 0.9);
+    transform: translateY(-100%);
+    transition: 0.2s;
+    z-index: -1;
 }
 
-.link .nav-link{
-    font-weight: 500;
-    color: var(--light-grey);
+.nav-links.open {
+    transform: translateY(0);
+}
+
+.nav-links .link .nav-link{
+    position: relative;
+    isolation: isolate;
+    padding-bottom: 8px;
+    color: var(--white);
     transition: 0.3s;
 }
 
-.link .nav-link:hover{
-    color: var(--blue);
+
+
+@media(width > 768px){
+    nav{
+        padding: 1rem 1rem;
+        position: static;
+        display: flex;
+        align-items: center;
+        justify-content: space-between
+    }
+
+    .navbar{
+        padding: 0;
+        background: none;
+    }
+
+    .fa-hotel{
+        color: var(--light-blue);
+    }
+
+    .logo span{
+        color: var(--black);
+    }
+
+    .menu-bar{
+        display: none;
+    }
+
+    .nav-links{
+        padding: 0;
+        width: unset;
+        position: static;
+        transform: none;
+        flex-direction: row;
+        background-color: transparent;
+    }
+
+    .nav-links .link .nav-link{
+        font-weight: 500;
+        color: var(--light-grey);
+    }
+
+    .nav-links .link .nav-link:hover{
+        color: var(--blue);
+    }
+
+    .nav-links .link .nav-link::after{
+        position: absolute;
+        content: "";
+        left: 0;
+        bottom: 0;
+        height: 2px;
+        width: 0;
+        background-color: var(--yellow);
+        transition: 0.2s;
+        transform-origin: left;
+    }
+
+    .nav-links .link .nav-link:hover::after{
+        width: 100%;
+    }
 }
+

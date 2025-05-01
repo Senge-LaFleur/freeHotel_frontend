@@ -12,7 +12,7 @@ function Header(){
     return(
         <div>
             <Navbar />
-            <section class="section-container header-container" id="header">
+            <section class="header-container" id="header">
                 <div class="header-image-container">
                     <div class="header-content">
                         <h1>Enjoy your Dream Vacation</h1>
@@ -55,9 +55,7 @@ function Header(){
                                 </div>
                                 <p>Add Kids</p>
                             </div>
-                            <button class="btn">
-                                <FontAwesomeIcon icon={['fas', 'fa-search']} />
-                            </button>
+                            <button class="btn">Find Rooms</button>
                         </form>
                     </div>
                 </div>
