@@ -104,6 +104,8 @@ function Dashboard() {
                     <input type="date" />
                 </div>
 
+                {/* ------------------------------ INSIGHTS ------------------------------- */}
+
                 <div class="insights">
 
                     {/* ------------------------------ SALES ------------------------------- */}
@@ -111,7 +113,7 @@ function Dashboard() {
                         <span><FontAwesomeIcon icon={['fas', 'fa-chart-line']} /></span>
                         <div class="middle">
                             <div class="left">
-                                <h3>Total sales</h3>
+                                <h3>Total Sales</h3>
                                 <h1>$25,024</h1>
                             </div>
                             <div class="progress">
@@ -166,6 +168,20 @@ function Dashboard() {
                         <small class="text-muted">Last 24 Hours</small>
                     </div>
                 </div>
+
+                {/* ------------------------------ RECENT ORDERS ------------------------------- */}
+
+                <div class="recent-order">
+                    <h2>Recent Orders</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
             </main>
         </div>
     </div>
