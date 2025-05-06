@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Header from '../../components/header/header.jsx'
-import Footer from '../../components/footer/footer.jsx'
+// import Header from '../../components/header/header.jsx'
+// import Footer from '../../components/footer/footer.jsx'
 import outside1 from "../../assets/images/outside1.jpg"
 import outside2 from "../../assets/images/outside2.jpg"
 import outside3 from "../../assets/images/outside3.jpg"
@@ -18,9 +18,11 @@ import profile6 from "../../assets/images/profile6.jpg"
 import './home.css'
 
 function Home(){
+    
+
     return(
         <div>
-            <Header />
+            {/* <Header /> */}
             <section class="popular-container">
                 <h2 class="section-header">Popular Hotel Deals Right Now</h2>
                 <div class="popular-grid">
@@ -256,7 +258,7 @@ function Home(){
                     </div>
                 </div>
             </section>
-            <Footer />
+            
         </div>
     )
 }

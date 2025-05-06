@@ -6,7 +6,10 @@ const Owner = () => {
     return (
         <div class="owner-form-container">
             <form action="">
-                <FontAwesomeIcon icon={['fas', 'fa-arrow-left']} />&nbsp;Back
+                <Link to="/signUp" class="link">
+                    <FontAwesomeIcon icon={['fas', 'fa-arrow-left']} />&nbsp;Back
+                </Link>
+                {/* <FontAwesomeIcon icon={['fas', 'fa-arrow-left']} />&nbsp;Back */}
                 <h2 class="section-header owner-form-header">Register as a Hotel Owner</h2>
                 <div class="owner-content">
                     <div class="box-container">
@@ -31,11 +34,11 @@ const Owner = () => {
                     </div>
                     <div class="buttons">
                         <button class="btn">Register</button>
-                        <button class="btn">Cancel</button>
+                        <Link to="/" class="link btn">Cancel</Link>
                     </div>
                     <div class="form-links">
                         <p><input type="checkbox" />&nbsp;&nbsp;Remember Me</p>
-                        <p>Already have an account? <span>Sign in</span></p>
+                        <Link to="/login" class="link"><p>Already have an account? <span>Login</span></p></Link>
                     </div>
                 </div>
             </form>

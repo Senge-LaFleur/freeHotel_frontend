@@ -1,13 +1,9 @@
-import { useEffect } from 'react';
-import { Link } from 'react-router-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Navbar from '../navbar/navbar';
 import './header.css'
 
 import React from "react";
 
 function Header(){
-    
 
     return(
         <div>

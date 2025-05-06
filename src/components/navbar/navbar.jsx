@@ -1,9 +1,7 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './navbar.css'
-
-import React from "react";
 
 function Navbar(){
     const [isOpen, setIsOpen] = useState(false);
@@ -31,9 +29,9 @@ function Navbar(){
                 
                 <ul id="nav-links" class={`nav-links ${isOpen ? 'open' : ''}`} onClick={closeMenu}>
                     <li class="link"><Link to="/" class="nav-link">Home</Link></li>
-                    <li class="link"><Link to="/hotels" class="nav-link">Hotels</Link></li>
+                    <li class="link"><Link to="/rooms" class="nav-link">Find Rooms</Link></li>
                     <li class="link"><Link to="/login" class="nav-link">Login</Link></li>
-                    <li class="link"><Link to="/contact" class="nav-link">Contact</Link></li>
+                    <li class="link"><Link to="/signUp" class="nav-link">Sign Up</Link></li>
                 </ul>  
             </nav>            
         </div>

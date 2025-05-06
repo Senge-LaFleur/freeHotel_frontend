@@ -61,12 +61,18 @@
 }
 
 .box-container .box:focus{
-    border-color: var(--blue);
+    outline: none;
+    border: 2px solid var(--blue);
 }
 
 .form-links{
     display: flex;
     justify-content: space-between;
+}
+
+.link{
+    text-decoration: none;
+    color: var(--black);
 }
 
 .form-links p{

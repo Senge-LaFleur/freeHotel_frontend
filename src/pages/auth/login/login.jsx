@@ -1,3 +1,5 @@
+import React, { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './login.css'
 
@@ -17,12 +19,12 @@ const Login = () => {
                         <input type="password" class="box" placeholder="Enter your Password" />
                     </div>
                     <div class="buttons">
-                        <button class="btn">Login</button>
-                        <button class="btn">Cancel</button>
+                        <button type="submit" class="btn">Login</button>
+                        <Link to="/" class="link btn">Cancel</Link>
                     </div>
                     <div class="form-links">
-                        <p>Forgot password? <span>Click Here</span></p>
-                        <p>Do not have an account? <span>Sign up</span></p>
+                        <Link to="/" class="link"><p>Forgot password? <span>Click Here</span></p></Link>
+                        <Link to="/signUp" class="link"><p>Do not have an account? <span>Sign up</span></p></Link>
                     </div>
                 </div>
             </form>
