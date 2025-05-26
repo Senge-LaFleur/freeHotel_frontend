@@ -1,0 +1,125 @@
+:root{
+    --black: #333;
+    --grey: #767268;
+    --light-grey: #7d8da1;
+    --white: #fefefe;
+    --extra-light: #eee;
+    --yellow: #ffd000;
+    --blue: #0b3e66;
+    --light-blue: #187fcd;
+    --danger: #ff7782;
+    --success: #41f1b6;
+    --blue-sidebar: #d1f1fd;
+    --color-light: rgba(24, 127, 205, 0.1);
+
+    --card-border-radius: 2rem;
+    --border-radius-1: 0.4rem;
+    --border-radius-2: 0.8rem;
+    --border-radius-3: 1.2rem;
+
+    --card-padding: 1.8rem;
+    --padding-1: 1.2rem;
+    --max-width: 1200px;
+    --box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    --box-shadow-1: 0 2rem 3rem var(--color-light);
+}
+
+.website{
+    font-size: 0.88rem;
+    color: var(--black);
+    width: 100vw;
+    background: var(--white);
+    user-select: none;
+    overflow: hidden;
+}
+
+.website .container{
+    display: grid;
+    width: 96%;
+    margin: 0;
+    gap: 3rem;
+    /* grid-template-columns: 14rem auto 23rem; */
+}
+
+.website img{
+    display: block;
+    width: 100%;
+}
+
+.website h1{
+    font-weight: 800;
+    font-size: 1.8rem;
+}
+
+.website h3{
+    font-size: 0.88rem;
+    font-weight: 500;
+}
+
+.website h4{
+    font-size: 0.8rem;
+}
+
+.website h5{
+    font-size: 0.77rem;
+}
+
+.website small{
+    font-size: 0.75rem;
+}
+
+.website .profile-photo{
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.website .text-muted{
+    color: var(--light-grey);
+}
+
+.website p{
+    color: var(--grey);
+    font-size: 1.1rem;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.website b{
+    color: var(--grey);
+}
+
+.website .primary{
+    color: var(--light-blue);
+}
+
+.website .danger{
+    color: var(--danger);
+}
+
+.website .success{
+    color: var(--success);
+}
+
+.website .warning{
+    color: var(--yellow);
+}
+
+
+
+/* ------------------------------------- MAIN ------------------------------------- */
+
+.website main{
+    margin-top: 1.4rem;
+}
+
+.website main :is(.section-subheader){
+    font-size: 20px;
+}
+
+.website main :is(.section-header){
+    text-align: center;
+}
+
+

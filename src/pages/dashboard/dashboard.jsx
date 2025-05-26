@@ -1,104 +1,47 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom'
+import Sidebar from '../../components/sidebar/sidebar.jsx'
 import './dashboard.css'
 
 function Dashboard() {
+    const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    const toggleSidebar = () => {
+        setIsSidebarExpanded(prev => !prev);
+    };
+
+    useEffect(() => {
+        const handleResize = () => {
+        const mobile = window.innerWidth <= 768;
+        setIsMobile(mobile);
+        if(mobile) setIsSidebarExpanded(false);
+        };
+        
+        window.addEventListener('resize', handleResize);
+        handleResize();
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
   return (
     <div class="dashboard">
-        <div class="container">
 
-            {/* ------------------------------ SIDEBAR ------------------------------- */}
 
-            <aside>
-                <div class="top">
-                    <div class="logo">
-                        <FontAwesomeIcon icon={['fas', 'fa-hotel']} />
-                        <span>FreeHotel</span>
-                    </div>
-                    <div class="close" id="close-btn">
-                        <FontAwesomeIcon icon={['fas', 'fa-times']} />
-                    </div>
-                </div>
+        {/* ------------------------------ SIDEBAR ------------------------------- */}
 
-                <div class="sidebar">
-                    <ul id="nav-links" class="nav-links">
-                        <li class="link">
-                            <Link to="/" class="nav-link">
-                                <span><FontAwesomeIcon icon={['fas', 'fa-table-cells']} /></span>
-                                <h3>Dashboard</h3>
-                            </Link>
-                        </li>
-                        <li class="link active">
-                            <Link to="/" class="nav-link">
-                                <span><FontAwesomeIcon icon={['fas', 'fa-globe']} /></span>
-                                <h3>Website</h3>
-                            </Link>
-                        </li>
-                        <li class="link">
-                            <Link to="/" class="nav-link">
-                                <span><FontAwesomeIcon icon={['fas', 'fa-user-friends']} /></span>
-                                <h3>Clients</h3>
-                            </Link>
-                        </li>
-                        <li class="link">
-                            <Link to="/" class="nav-link">
-                                <span><FontAwesomeIcon icon={['fas', 'fa-calendar-check']} /></span>
-                                <h3>Reservations</h3>
-                            </Link>
-                        </li>
-                        <li class="link">
-                            <Link to="/" class="nav-link">
-                                <span><FontAwesomeIcon icon={['fas', 'fa-chart-line']} /></span>
-                                <h3>Analytics</h3>
-                            </Link>
-                        </li>
-                        <li class="link">
-                            <Link to="/" class="nav-link">
-                                <span><FontAwesomeIcon icon={['fas', 'fa-inbox']} /></span>
-                                <h3>Inbox</h3>
-                                <p class="message-count">99+</p>
-                            </Link>
-                        </li>
-                        <li class="link">
-                            <Link to="/" class="nav-link">
-                                <span><FontAwesomeIcon icon={['fas', 'fa-hotel']} /></span>
-                                <h3>Hotels</h3>
-                            </Link>
-                        </li>
-                        <li class="link">
-                            <Link to="/" class="nav-link">
-                                <span><FontAwesomeIcon icon={['fas', 'fa-file-invoice']} /></span>
-                                <h3>Invoices</h3>
-                            </Link>
-                        </li>
-                        <li class="link">
-                            <Link to="/" class="nav-link">
-                                <span><FontAwesomeIcon icon={['fas', 'fa-file-alt']} /></span>
-                                <h3>Reports</h3>
-                            </Link>
-                        </li>
-                        <li class="link" id="settings">
-                            <Link to="/" class="nav-link">
-                                <span><FontAwesomeIcon icon={['fas', 'fa-cog']} /></span>
-                                <h3>Settings</h3>
-                            </Link>
-                        </li>
-                        <li class="link" id="log-out">
-                            <Link to="/" class="nav-link">
-                                <span><FontAwesomeIcon icon={['fas', 'fa-sign-out-alt']} /></span>
-                                <h3>Log Out</h3>
-                            </Link>
-                        </li>
-                    </ul>  
-                </div>
-            </aside>
+        <Sidebar isExpanded={isSidebarExpanded} toggleSidebar={toggleSidebar} isMobile={isMobile} />
+
+        <div 
+            class="container"
+            style={{marginLeft: !isMobile && isSidebarExpanded ? 
+            '280px' : !isMobile && !isSidebarExpanded ?
+            '110px' : '100px', transition: 'margin-left 0.3s ease-in-out'}}
+        >
 
             {/* ------------------------------ MAIN SECTION ------------------------------- */}
 
             <main>
-                <h1 class="section-header">Dashboard</h1>
+                <h2 class="section-header">Dashboard</h2>
 
                 <div class="date">
                     <input type="date" />

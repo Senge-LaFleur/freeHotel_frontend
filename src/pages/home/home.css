@@ -120,17 +120,25 @@
     border-radius: 100%;
 }
 
+.client-card .star{
+    display: flex;
+    justify-content: center;
+    gap: 0.1rem;
+    margin: 1rem 0;
+}
+
+.fa-star{
+    color: var(--yellow);
+}
+
+#half-star{
+    color: var(--yellow);
+}
+
 .client-card p{
     text-align: center;
     color: var(--black);
 }
-
-
-
-
-
-
-
 
 
 

@@ -9,6 +9,7 @@
     --light-blue: #187fcd;
     --danger: #ff7782;
     --success: #41f1b6;
+    --blue-sidebar: #d1f1fd;
     --color-light: rgba(24, 127, 205, 0.1);
 
     --card-border-radius: 2rem;
@@ -32,205 +33,90 @@
     overflow: hidden;
 }
 
-.container{
+.dashboard .container{
     display: grid;
     width: 96%;
-    margin: 0 auto;
-    gap: 1.8rem;
-    grid-template-columns: 14rem auto 23rem;
+    margin: 0;
+    gap: 3rem;
+    /* grid-template-columns: 14rem auto 23rem; */
 }
 
-img{
+.dashboard img{
     display: block;
     width: 100%;
 }
 
-h1{
+.dashboard h1{
     font-weight: 800;
     font-size: 1.8rem;
 }
 
-h2{
-    font-size: 1.4rem;
-}
-
-h3{
+.dashboard h3{
     font-size: 0.88rem;
     font-weight: 500;
 }
 
-h4{
+.dashboard h4{
     font-size: 0.8rem;
 }
 
-h5{
+.dashboard h5{
     font-size: 0.77rem;
 }
 
-small{
+.dashboard small{
     font-size: 0.75rem;
 }
 
-.profile-photo{
+.dashboard .profile-photo{
     width: 2.8rem;
     height: 2.8rem;
     border-radius: 50%;
     overflow: hidden;
 }
 
-.text-muted{
+.dashboard .text-muted{
     color: var(--light-grey);
 }
 
-p{
+.dashboard p{
     color: var(--black);
 }
 
-b{
+.dashboard b{
     color: var(--grey);
 }
 
-.primary{
+.dashboard .primary{
     color: var(--light-blue);
 }
 
-.danger{
+.dashboard .danger{
     color: var(--danger);
 }
 
-.success{
+.dashboard .success{
     color: var(--success);
 }
 
-.warning{
+.dashboard .warning{
     color: var(--yellow);
 }
 
-/* ------------------------------ SIDEBAR ------------------------------- */
 
-aside{
-    height: 100vh;
-}
-
-aside .top{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 1.4rem;
-}
-
-.aside .top .logo{
-    display: flex;
-    gap: 0.8rem;
-}
-
-.logo .fa-hotel{
-    color: var(--light-blue);
-    font-size: 1.5rem;
-    font-weight: 600;
-}
-
-.logo span{
-    color: var(--black);
-    font-size: 1.5rem;
-    font-weight: 600;
-}
-
-#close-btn{
-    display: none;
-}
-
-aside .sidebar{
-    display: flex;
-    flex-direction: column;
-    height: 86vh;
-    position: relative;
-    top: 3rem;
-}
-
-aside h3{
-    font-weight: 500;
-}
-
-.link{
-    list-style: none;
-}
-
-aside .sidebar .nav-link{
-    display: flex;
-    color: var(--black);
-    margin-left: 2rem;
-    gap: 1rem;
-    align-items: center;
-    position: relative;
-    height: 3rem;
-    transition: all 0.3s ease;
-}
-
-aside .sidebar .nav-link span{
-    font-size: 1.2rem;
-    transition: all 0.3s ease;
-}
-
-aside .sidebar .link:last-child{
-    position: absolute;
-    bottom: 2rem;
-    width: 100%;
-}
-
-aside .sidebar li.active{
-    background-color: var(--color-light);
-    position: relative;
-}
-
-aside .sidebar li.active::before{
-    content: "";
-    width: 6px;
-    height: 100%;
-    background: var(--light-blue);
-    position: absolute;
-    left: 0;
-    top: 0;
-}
-
-aside .sidebar li.active .nav-link{
-    color: var(--light-blue);
-    /* margin-left: 0; */
-}
-
-aside .sidebar li.active .nav-link span{
-    color: var(--light-blue);
-    margin-left: calc(1rem - 15px);
-}
-
-aside .sidebar li .nav-link:hover{
-    color: var(--light-blue);
-}
-
-aside .sidebar li .nav-link:hover span{
-    margin-left: 1rem;
-}
-
-aside .sidebar .message-count{
-    background: var(--danger);
-    color: var(--white);
-    padding: 2px 10px;
-    font-size: 11px;
-    border-radius: var(--border-radius-1);
-}
 
 /* ------------------------------ MAIN SECTION ------------------------------- */
 
-main{
+.dashboard main{
     margin-top: 1.4rem;
 }
 
-main :is(.section-header){
+.dashboard main :is(.section-header){
     text-align: left;
-    margin-inline: auto;
+    /* margin-inline: auto; */
 }
 
-main .date{
+.dashboard main .date{
     display: inline-block;
     background: var(--color-light);
     border-radius: var(--border-radius-1);
@@ -238,20 +124,20 @@ main .date{
     padding: 0.5rem 1.6rem;
 }
 
-main .date input[type="date"]{
+.dashboard main .date input[type="date"]{
     background: transparent;
     color: var(--black);
     border: none;
     outline: none;
 }
 
-main .insights{
+.dashboard main .insights{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.6rem;
 }
 
-main .insights > div{
+.dashboard main .insights > div{
     background: var(--white);
     padding: var(--card-padding);
     border-radius: var(--card-border-radius);
@@ -260,7 +146,7 @@ main .insights > div{
     transition: all 0.3s ease;
 }
 
-main .insights > div span{
+.dashboard main .insights > div span{
     background: var(--light-blue);
     padding: 0.5rem;
     border-radius: 50%;
@@ -268,27 +154,27 @@ main .insights > div span{
     font-size: 1.5rem;
 }
 
-main .insights > div.expenses span{
+.dashboard main .insights > div.expenses span{
     background: var(--danger);
 }
 
-main .insights > div.income span{
+.dashboard main .insights > div.income span{
     background: var(--success);
 }
 
-main .insights > div .middle{
+.dashboard main .insights > div .middle{
     margin-top: .5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-main .insights h3{
+.dashboard main .insights h3{
     margin: 1rem 0 0.6rem;
     font-size: 0.9rem;
 }
 
-main .insights .progress{
+.dashboard main .insights .progress{
     position: relative;
     width: 92px;
     height: 92px;
@@ -300,7 +186,7 @@ main .insights .svg{
     height: 7rem;
 }
 
-main .insights .svg circle{
+.dashboard main .insights .svg circle{
     fill: none;
     stroke: var(--light-blue);
     stroke-width: 14;
@@ -310,22 +196,22 @@ main .insights .svg circle{
     stroke-dashoffset: 92;
 }
 
-main .insights .sales .svg circle{
+.dashboard main .insights .sales .svg circle{
     stroke-dashoffset: -30;
     stroke-dasharray: 200;
 }
 
-main .insights .expenses .svg circle{
+.dashboard main .insights .expenses .svg circle{
     stroke-dashoffset: 20;
     stroke-dasharray: 80;
 }
 
-main .insights .income .svg circle{
+.dashboard main .insights .income .svg circle{
     stroke-dashoffset: 35;
     stroke-dasharray: 110;
 }
 
-main .insights .progress .number{
+.dashboard main .insights .progress .number{
     position: absolute;
     top: 0; left: 0;
     height: 100%;
@@ -335,8 +221,16 @@ main .insights .progress .number{
     justify-content: center;
 }
 
-main .insights small{
+.dashboard main .insights small{
     margin-top: 1.3rem;
     display: block;
+}
+
+
+
+@media screen and (max-width: 768px){
+    .dashboard main .insights{
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 

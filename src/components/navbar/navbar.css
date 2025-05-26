@@ -13,14 +13,14 @@
 nav{
     position: fixed;
     isolation: isolate;
-    top: 0%;
+    top: 0;
     width: 100%;
     max-width: var(--max-width);
     margin: auto;
     z-index: 9;
 }
 
-.navbar{
+nav .navbar{
     padding: 1rem;
     display: flex;
     align-items: center;
@@ -29,23 +29,23 @@ nav{
     background-color: var(--blue);
 }
 
-.logo{
+nav .navbar .logo{
     font-size: 1.5rem;
     font-weight: 600;
     color: var(--white);
 }
 
-.fa-hotel{
+nav .navbar .logo .fa-hotel{
     font-size: 1.5rem;
 }
 
-.menu-bar{
+nav .navbar .menu-bar{
     font-size: 1.5rem;
     color: var(--white);
     cursor: pointer;
 }
 
-.nav-links{
+nav .nav-links{
     list-style: none;
     position: absolute;
     width: 100%;
@@ -60,11 +60,11 @@ nav{
     z-index: -1;
 }
 
-.nav-links.open {
+nav .nav-links.open {
     transform: translateY(0);
 }
 
-.nav-links .link .nav-link{
+nav .nav-links .link .nav-link{
     position: relative;
     isolation: isolate;
     padding-bottom: 8px;
@@ -83,24 +83,24 @@ nav{
         justify-content: space-between
     }
 
-    .navbar{
+    nav .navbar{
         padding: 0;
         background: none;
     }
 
-    .fa-hotel{
+    nav .navbar .logo .fa-hotel{
         color: var(--light-blue);
     }
 
-    .logo span{
+    nav .navbar .logo span{
         color: var(--black);
     }
 
-    .menu-bar{
+    nav .navbar .menu-bar{
         display: none;
     }
 
-    .nav-links{
+    nav .nav-links{
         padding: 0;
         width: unset;
         position: static;
@@ -109,16 +109,16 @@ nav{
         background-color: transparent;
     }
 
-    .nav-links .link .nav-link{
+    nav .nav-links .link .nav-link{
         font-weight: 500;
         color: var(--light-grey);
     }
 
-    .nav-links .link .nav-link:hover{
+    nav .nav-links .link .nav-link:hover{
         color: var(--blue);
     }
 
-    .nav-links .link .nav-link::after{
+    nav .nav-links .link .nav-link::after{
         position: absolute;
         content: "";
         left: 0;
@@ -130,7 +130,7 @@ nav{
         transform-origin: left;
     }
 
-    .nav-links .link .nav-link:hover::after{
+    nav .nav-links .link .nav-link:hover::after{
         width: 100%;
     }
 }

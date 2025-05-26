@@ -1,7 +1,4 @@
-import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import Header from '../../components/header/header.jsx'
-// import Footer from '../../components/footer/footer.jsx'
 import outside1 from "../../assets/images/outside1.jpg"
 import outside2 from "../../assets/images/outside2.jpg"
 import outside3 from "../../assets/images/outside3.jpg"
@@ -22,7 +19,6 @@ function Home(){
 
     return(
         <div>
-            {/* <Header /> */}
             <section class="popular-container">
                 <h2 class="section-header">Popular Hotel Deals Right Now</h2>
                 <div class="popular-grid">
@@ -220,37 +216,79 @@ function Home(){
                     <h2 class="section-header">What our Clients Say</h2>
                     <div class="client-grid">
                         <div class="client-card">
-                            <img src={profile1} />
+                            <img src={profile1} alt="review-profile" />
+                            <div class="star">
+                                <FontAwesomeIcon icon={['fas','fa-star']} />
+                                <FontAwesomeIcon icon={['fas','fa-star']} />
+                                <FontAwesomeIcon icon={['fas','fa-star']} />
+                                <FontAwesomeIcon icon={['fas','fa-star']} />
+                                <FontAwesomeIcon icon={['fas','fa-star-half-alt']} id="half-star" />
+                            </div>
                             <p>The booking process was seamless, and the confirmation was instant.
                                 I highly recommend FreeHotel for hassle-free hotel bookings.
                             </p>
                         </div>
                         <div class="client-card">
-                            <img src={profile2} />
+                            <img src={profile2} alt="review-profile" />
+                            <div class="star">
+                                <FontAwesomeIcon icon={['fas','fa-star']} />
+                                <FontAwesomeIcon icon={['fas','fa-star']} />
+                                <FontAwesomeIcon icon={['fas','fa-star']} />
+                                <FontAwesomeIcon icon={['fas','fa-star']} />
+                                <FontAwesomeIcon icon={['fas','fa-star-half-alt']} id="half-star" />
+                            </div>
                             <p>The booking process was seamless, and the confirmation was instant.
                                 I highly recommend FreeHotel for hassle-free hotel bookings.
                             </p>
                         </div>
                         <div class="client-card">
-                            <img src={profile3} />
+                            <img src={profile3} alt="review-profile" />
+                            <div class="star">
+                                <FontAwesomeIcon icon={['fas','fa-star']} />
+                                <FontAwesomeIcon icon={['fas','fa-star']} />
+                                <FontAwesomeIcon icon={['fas','fa-star']} />
+                                <FontAwesomeIcon icon={['fas','fa-star']} />
+                                <FontAwesomeIcon icon={['fas','fa-star-half-alt']} id="half-star" />
+                            </div>
                             <p>The booking process was seamless, and the confirmation was instant.
                                 I highly recommend FreeHotel for hassle-free hotel bookings.
                             </p>
                         </div>
                         <div class="client-card">
-                            <img src={profile4} />
+                            <img src={profile4} alt="review-profile" />
+                            <div class="star">
+                                <FontAwesomeIcon icon={['fas','fa-star']} />
+                                <FontAwesomeIcon icon={['fas','fa-star']} />
+                                <FontAwesomeIcon icon={['fas','fa-star']} />
+                                <FontAwesomeIcon icon={['fas','fa-star']} />
+                                <FontAwesomeIcon icon={['fas','fa-star-half-alt']} id="half-star" />
+                            </div>
                             <p>The booking process was seamless, and the confirmation was instant.
                                 I highly recommend FreeHotel for hassle-free hotel bookings.
                             </p>
                         </div>
                         <div class="client-card">
-                            <img src={profile5} />
+                            <img src={profile5} alt="review-profile" />
+                            <div class="star">
+                                <FontAwesomeIcon icon={['fas','fa-star']} />
+                                <FontAwesomeIcon icon={['fas','fa-star']} />
+                                <FontAwesomeIcon icon={['fas','fa-star']} />
+                                <FontAwesomeIcon icon={['fas','fa-star']} />
+                                <FontAwesomeIcon icon={['fas','fa-star-half-alt']} id="half-star" />
+                            </div>
                             <p>The booking process was seamless, and the confirmation was instant.
                                 I highly recommend FreeHotel for hassle-free hotel bookings.
                             </p>
                         </div>
                         <div class="client-card">
-                            <img src={profile6} />
+                            <img src={profile6} alt="review-profile" />
+                            <div class="star">
+                                <FontAwesomeIcon icon={['fas','fa-star']} />
+                                <FontAwesomeIcon icon={['fas','fa-star']} />
+                                <FontAwesomeIcon icon={['fas','fa-star']} />
+                                <FontAwesomeIcon icon={['fas','fa-star']} />
+                                <FontAwesomeIcon icon={['fas','fa-star-half-alt']} id="half-star" />
+                            </div>
                             <p>The booking process was seamless, and the confirmation was instant.
                                 I highly recommend FreeHotel for hassle-free hotel bookings.
                             </p>
@@ -258,6 +296,8 @@ function Home(){
                     </div>
                 </div>
             </section>
+
+            
             
         </div>
     )

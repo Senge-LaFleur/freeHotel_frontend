@@ -1,0 +1,55 @@
+:root{
+    --black: #333;
+    --light-grey: #767268;
+    --extra-light: #eee;
+    --white: #fefefe;
+    --yellow: #ffdd00;
+    --blue: #0b3e66;
+    --light-blue: #187fcd;
+    --box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.rooms-image-container{
+    position: relative;
+    min-height: 300px;
+    background-image: linear-gradient(to right, rgba(0,0,0,0.4), rgba(0,0,0,0)), url('../../assets/images/outside7.jpg');
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.rooms-content{
+    padding: 5rem 2rem;
+}
+
+.rooms-content h1{
+    margin: 0;
+    font-size: 3.5rem;
+    line-height: 4rem;
+    font-weight: 600;
+    color: var(--white);
+}
+
+.rooms-content p{
+    font-size: 1.3rem;
+    color: var(--extra-light);
+}
+
+
+
+
+@media(max-width: 768px){
+    .rooms-content{
+        max-width: 600px;
+        padding: 5rem 2rem;
+    }
+    
+    .rooms-content h1{
+        margin-bottom: 1rem;
+        font-size: 2.5rem;
+        line-height: 3rem;
+        font-weight: 600;
+        color: var(--white);
+    }
+}
+
