@@ -19,8 +19,9 @@ function Navbar(){
             <nav>
                 <div class="navbar">
                     <div class="logo">
-                        <FontAwesomeIcon icon={['fas', 'fa-hotel']} />
-                        <span>FreeHotel</span>
+                        {/* <FontAwesomeIcon icon={['fas', 'fa-hotel']} />
+                        <span>FreeHotel</span> */}
+                        <img src="/FH-full.jpg" alt="logo" />
                     </div>
                     <div class="menu-bar" id="menu-bar" onClick={toggleMenu}>
                         <FontAwesomeIcon icon={isOpen ? ['fas', 'fa-times'] : ['fas', 'fa-bars']} />

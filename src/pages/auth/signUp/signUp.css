@@ -34,47 +34,47 @@
     margin-inline: auto;
 }
 
-.radio-container{
+.signUp-content .radio-container{
     display: grid;
     gap: 1rem;
     padding: 1rem;
 }
 
-label{
+.signUp-content .radio-container label{
     display: flex;
     gap: 1rem;
 }
 
-input[type="radio"]{
+.signUp-content .radio-container input[type="radio"]{
     accent-color: var(--light-blue);
 }
 
-label span{
+.signUp-content .radio-container label span{
     font-size: 1.2rem;
 }
 
-.buttons{
+.signUp-content .buttons{
     display: flex;
     justify-content: space-between;
     padding: 0 3rem;
 }
 
-.link{
+.signUp-content .link{
     text-decoration: none;
 }
 
-.form-link p{
+.signUp-content .form-link p{
     padding: .5rem 0;
     font-size: 1rem;
     text-align: center;
     color: var(--grey);
 }
 
-.form-link p span{
+.signUp-content .form-link p span{
     color: var(--light-blue);
 }
 
-.form-link p span:hover{
+.signUp-content .form-link p span:hover{
     text-decoration: underline;
 }
 

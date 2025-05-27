@@ -34,7 +34,13 @@
     margin-inline: auto;
 }
 
-.box-container{
+.login-content{
+    display: grid;
+    gap: 1rem;
+    padding-top: 2rem;
+}
+
+.login-content .box-container{
     display: flex;
     gap: .5rem;
 }
@@ -44,9 +50,9 @@
     color: var(--blue);
 }
 
-.box-container .box{
+.login-content .box-container .box{
     width: 100%;
-    padding: 1rem;
+    padding: .8rem;
     font-size: 1.2rem;
     color: var(--black);
     margin: .6rem 0;
@@ -55,40 +61,40 @@
     text-transform: none;
 }
 
-.box-container .box:focus{
+.login-content .box-container .box:focus{
     outline: none;
     border: 2px solid var(--blue);
 }
 
-.buttons{
+.login-content .buttons{
     display: grid;
     gap: 1rem;
 }
 
-.buttons .btn{
+.login-content .buttons .btn{
     width: 100%;
 }
 
-.form-links{
+.login-content .form-links{
     display: flex;
     justify-content: space-between;
 }
 
-.form-links .link{
+.login-content .form-links .link{
     text-decoration: none;
 }
 
-.form-links p{
+.login-content .form-links p{
     padding: .5rem 0;
     font-size: .8rem;
     color: var(--grey);
 }
 
-.form-links p span{
+.login-content .form-links p span{
     color: var(--light-blue);
 }
 
-.form-links p span:hover{
+.login-content .form-links p span:hover{
     text-decoration: underline;
 }
 

@@ -19,7 +19,7 @@ const Login = () => {
                         <input type="password" class="box" placeholder="Enter your Password" />
                     </div>
                     <div class="buttons">
-                        <button type="submit" class="btn">Login</button>
+                        <Link to="/" class="link btn">Log in</Link>
                         <Link to="/" class="link btn">Cancel</Link>
                     </div>
                     <div class="form-links">

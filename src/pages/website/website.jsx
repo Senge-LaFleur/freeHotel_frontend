@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Sidebar from '../../components/sidebar/sidebar.jsx'
+import Navbar2 from '../../components/navbar2/navbar2.jsx';
 import './website.css';
 
 function Website() {
@@ -25,16 +26,19 @@ function Website() {
     }, []);
 
     return (
-      <div class="website">
+      <div class="website" id="content">
           <Sidebar isExpanded={isSidebarExpanded} toggleSidebar={toggleSidebar} isMobile={isMobile} />
 
           <div 
             class="container"
             style={{marginLeft: !isMobile && isSidebarExpanded ? 
             '280px' : !isMobile && !isSidebarExpanded ?
-            '110px' : '100px', transition: 'margin-left 0.3s ease-in-out'}}
+            '100px' : '100px', transition: 'margin-left 0.3s ease-in-out'}}
           >
               <main>
+
+                  <Navbar2 />
+
                   <h3 class="section-subheader">DESIGN TEMPLATES</h3>
                   <h2 class="section-header">Build Your Own Website</h2>
                   <p>Creating websites has never been this easy. Let us help you generate your hotel platform in seconds</p>

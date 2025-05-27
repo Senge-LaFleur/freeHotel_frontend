@@ -88,6 +88,9 @@
 
 
 @media(max-width: 768px){
+    .booking-container{
+        position: relative;
+    }
 
     .booking-container form{
         grid-template-columns: repeat(2, 1fr);

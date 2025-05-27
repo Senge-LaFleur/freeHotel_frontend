@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Sidebar from '../../components/sidebar/sidebar.jsx'
+import Navbar2 from '../../components/navbar2/navbar2.jsx';
+import profile1 from '../../assets/images/profile1.jpg'
 import './dashboard.css'
 
 function Dashboard() {
@@ -24,7 +27,7 @@ function Dashboard() {
     }, []);
 
   return (
-    <div class="dashboard">
+    <div class="dashboard" id="content">
 
 
         {/* ------------------------------ SIDEBAR ------------------------------- */}
@@ -32,97 +35,143 @@ function Dashboard() {
         <Sidebar isExpanded={isSidebarExpanded} toggleSidebar={toggleSidebar} isMobile={isMobile} />
 
         <div 
-            class="container"
-            style={{marginLeft: !isMobile && isSidebarExpanded ? 
-            '280px' : !isMobile && !isSidebarExpanded ?
-            '110px' : '100px', transition: 'margin-left 0.3s ease-in-out'}}
+            class={`container ${isSidebarExpanded ? 'expanded' : 'collapsed'}`}
+            style={
+                {marginLeft: !isMobile && isSidebarExpanded ? 
+                    '280px' : !isMobile && !isSidebarExpanded ?
+                    '100px' : '100px', transition: 'margin-left 0.3s ease-in-out'
+                }
+            }
         >
+
+
+            
 
             {/* ------------------------------ MAIN SECTION ------------------------------- */}
 
             <main>
+
+                <Navbar2 />
+
                 <h2 class="section-header">Dashboard</h2>
 
                 <div class="date">
                     <input type="date" />
                 </div>
 
-                {/* ------------------------------ INSIGHTS ------------------------------- */}
+                <ul class="box-info">
+                    <li>
+                        <span class="icon"><FontAwesomeIcon icon={['fas','fa-calendar-check']} /></span>
+                        <span class="text">
+                            <h3>1020</h3>
+                            <p>New Orders</p>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="icon"><FontAwesomeIcon icon={['fas','fa-users']} /></span>
+                        <span class="text">
+                            <h3>2834</h3>
+                            <p>Visitors</p>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="icon"><FontAwesomeIcon icon={['fas','fa-dollar-sign']} /></span>
+                        <span class="text">
+                            <h3>$2543</h3>
+                            <p>Total Sales</p>
+                        </span>
+                    </li>
+                </ul>
 
-                <div class="insights">
 
-                    {/* ------------------------------ SALES ------------------------------- */}
-                    <div class="sales">
-                        <span><FontAwesomeIcon icon={['fas', 'fa-chart-line']} /></span>
-                        <div class="middle">
-                            <div class="left">
-                                <h3>Total Sales</h3>
-                                <h1>$25,024</h1>
-                            </div>
-                            <div class="progress">
-                                <svg class="svg">
-                                    <circle cx='38' cy='36' r='36'></circle>
-                                </svg>
-                                <div class="number">
-                                    <p>81%</p>
-                                </div>
-                            </div>
+                <div class="table-data">
+                    <div class="order">
+                        <div class="head">
+                            <h3>Recent Orders</h3>
+                            <i class='bx bx-search' ></i>
+                            <i class='bx bx-filter' ></i>
                         </div>
-                        <small class="text-muted">Last 24 Hours</small>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Date Order</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <img src={profile1} alt="" />
+                                        <p>John Doe</p>
+                                    </td>
+                                    <td>01-10-2021</td>
+                                    <td><span class="status completed">Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <img src={profile1} alt="" />
+                                        <p>John Doe</p>
+                                    </td>
+                                    <td>01-10-2021</td>
+                                    <td><span class="status pending">Pending</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <img src={profile1} alt="" />
+                                        <p>John Doe</p>
+                                    </td>
+                                    <td>01-10-2021</td>
+                                    <td><span class="status process">Process</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <img src={profile1} alt="" />
+                                        <p>John Doe</p>
+                                    </td>
+                                    <td>01-10-2021</td>
+                                    <td><span class="status pending">Pending</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <img src={profile1} alt="" />
+                                        <p>John Doe</p>
+                                    </td>
+                                    <td>01-10-2021</td>
+                                    <td><span class="status completed">Completed</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-
-                    {/* ------------------------------ EXPENSES ------------------------------- */}
-                    <div class="expenses">
-                        <span><FontAwesomeIcon icon={['fas', 'fa-chart-column']} /></span>
-                        <div class="middle">
-                            <div class="left">
-                                <h3>Total Expenses</h3>
-                                <h1>$14,160</h1>
-                            </div>
-                            <div class="progress">
-                                <svg class="svg">
-                                    <circle cx='38' cy='36' r='36'></circle>
-                                </svg>
-                                <div class="number">
-                                    <p>62%</p>
-                                </div>
-                            </div>
+                    <div class="todo">
+                        <div class="head">
+                            <h3>Todos</h3>
+                            <span><FontAwesomeIcon icon={['fas','fa-plus']} /></span>
+                            <span><FontAwesomeIcon icon={['fas','fa-filter']} /></span>
                         </div>
-                        <small class="text-muted">Last 24 Hours</small>
+                        <ul class="todo-list">
+                            <li class="completed">
+                                <p>Todo List</p>
+                                <span><FontAwesomeIcon icon={['fas','fa-ellipsis-v']} /></span>
+                            </li>
+                            <li class="completed">
+                                <p>Todo List</p>
+                                <span><FontAwesomeIcon icon={['fas','fa-ellipsis-v']} /></span>
+                            </li>
+                            <li class="not-completed">
+                                <p>Todo List</p>
+                                <span><FontAwesomeIcon icon={['fas','fa-ellipsis-v']} /></span>
+                            </li>
+                            <li class="completed">
+                                <p>Todo List</p>
+                                <span><FontAwesomeIcon icon={['fas','fa-ellipsis-v']} /></span>
+                            </li>
+                            <li class="not-completed">
+                                <p>Todo List</p>
+                                <span><FontAwesomeIcon icon={['fas','fa-ellipsis-v']} /></span>
+                            </li>
+                        </ul>
                     </div>
-
-                    {/* ------------------------------ INCOME ------------------------------- */}
-                    <div class="income">
-                        <span><FontAwesomeIcon icon={['fas', 'fa-chart-area']} /></span>
-                        <div class="middle">
-                            <div class="left">
-                                <h3>Total Income</h3>
-                                <h1>$10,864</h1>
-                            </div>
-                            <div class="progress">
-                                <svg class="svg">
-                                    <circle cx='38' cy='36' r='36'></circle>
-                                </svg>
-                                <div class="number">
-                                    <p>44%</p>
-                                </div>
-                            </div>
-                        </div>
-                        <small class="text-muted">Last 24 Hours</small>
-                    </div>
-                </div>
-
-                {/* ------------------------------ RECENT ORDERS ------------------------------- */}
-
-                <div class="recent-order">
-                    <h2>Recent Orders</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th></th>
-                            </tr>
-                        </thead>
-                    </table>
                 </div>
 
             </main>

@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import GridViewIcon from '@mui/icons-material/GridView';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+
 import './sidebar.css';
 
 function Sidebar({ isExpanded, toggleSidebar, isMobile }) {
@@ -25,7 +29,8 @@ function Sidebar({ isExpanded, toggleSidebar, isMobile }) {
                     <ul id="side-links" class="side-links">
                         <li class="side-list">
                             <NavLink to="/dashboard" className={({ isActive }) => isActive ? 'side-link active' : 'side-link'}>
-                                <span><FontAwesomeIcon icon={['fas', 'fa-table-cells']} /></span>
+                                {/* <span><FontAwesomeIcon icon={['fas', 'fa-table-cells']} /></span> */}
+                                <span><DashboardIcon /></span>
                                 {isExpanded && <h3>Dashboard</h3> }
                             </NavLink>
                         </li>
@@ -86,8 +91,8 @@ function Sidebar({ isExpanded, toggleSidebar, isMobile }) {
                         </li>
                         <li class="side-list bottom" id="log-out">
                             <NavLink to="/logout" className={({ isActive }) => isActive ? 'side-link active' : 'side-link'}>
-                                <span><FontAwesomeIcon icon={['fas', 'fa-sign-out-alt']} /></span>
-                                {isExpanded && <h3>Log Out</h3> }
+                                <span id="log-out"><FontAwesomeIcon icon={['fas', 'fa-sign-out-alt']} /></span>
+                                {isExpanded && <h3 id="log-out">Log Out</h3> }
                             </NavLink>
                         </li>
                     </ul>  

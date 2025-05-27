@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link, useNavigate } from 'react-router-dom';
 import './signUp.css'
 
 const SignUp = () => {
@@ -31,7 +29,7 @@ const SignUp = () => {
                         </label>
                     </div>
                     <div class="buttons">
-                        <button class="btn" onClick={handleNavigate} disabled={!selectedOption}>Register</button>
+                        <button class="link btn" onClick={handleNavigate} disabled={!selectedOption}>Register</button>
                         <Link to="/" class="link btn">Cancel</Link>
                     </div>
                     <div class="form-link">

@@ -3,7 +3,7 @@
     --grey: #767268;
     --light-grey: #7d8da1;
     --white: #fefefe;
-    --extra-light: #eee;
+    --extra-light: #eff0f3;
     --yellow: #ffd000;
     --blue: #0b3e66;
     --light-blue: #187fcd;
@@ -28,17 +28,27 @@
     font-size: 0.88rem;
     color: var(--black);
     width: 100vw;
+    height: 100vh;
     background: var(--white);
     user-select: none;
     overflow: hidden;
 }
 
 .website .container{
-    display: grid;
-    width: 96%;
-    margin: 0;
-    gap: 3rem;
-    /* grid-template-columns: 14rem auto 23rem; */
+    position: relative;
+    padding-right: 1rem;
+    width: auto;
+    margin-left: 280px;
+    transition: all 0.3s ease;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+
+.website .container.collapsed {
+    width: auto;
+    margin-left: 80px;
+    transition: all 0.3s ease;
 }
 
 .website img{
@@ -110,16 +120,12 @@
 
 /* ------------------------------------- MAIN ------------------------------------- */
 
-.website main{
-    margin-top: 1.4rem;
-}
-
 .website main :is(.section-subheader){
     font-size: 20px;
+    margin-top: 1.5rem;
 }
 
 .website main :is(.section-header){
     text-align: center;
 }
-
 
