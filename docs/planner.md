@@ -3,11 +3,11 @@ PRODUCT BACKLOG
 1. Frontend
     - Home page
     - Authentification
-    - Templates
+    - Templates (at least 3)
     - Dashboard
     - Hotel search
     - Integrate templates
-    - Filtering hotel search results -> Ref: Trivago
+    - Filtering hotel and room search results -> Ref: Trivago
 
 
 2. Backend
@@ -29,10 +29,16 @@ Sprint Backlog 1
     - Finish templates ()
 
 
-
-
-
 2. Backend
     - Search
     - Implement all models and connect to the database
     - Authentification
+
+
+
+Sprint Backlog 2
+1. Frontend
+    - Finish website page
+    - Integrate templates and generation functionnalities
+    - Finish rooms page
+    - Integrate front and back ends

@@ -9,7 +9,6 @@ const Owner = () => {
                 <Link to="/signUp" class="link">
                     <FontAwesomeIcon icon={['fas', 'fa-arrow-left']} />&nbsp;Back
                 </Link>
-                {/* <FontAwesomeIcon icon={['fas', 'fa-arrow-left']} />&nbsp;Back */}
                 <h2 class="section-header owner-form-header">Register as a Hotel Owner</h2>
                 <div class="owner-content">
                     <div class="box-container">
