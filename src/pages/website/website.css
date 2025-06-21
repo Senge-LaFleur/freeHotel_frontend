@@ -1,4 +1,4 @@
-:root{
+:root {
     --black: #333;
     --grey: #767268;
     --light-grey: #7d8da1;
@@ -20,11 +20,11 @@
     --card-padding: 1.8rem;
     --padding-1: 1.2rem;
     --max-width: 1200px;
-    --box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     --box-shadow-1: 0 2rem 3rem var(--color-light);
 }
 
-.website{
+.website {
     font-size: 0.88rem;
     color: var(--black);
     width: 100vw;
@@ -34,7 +34,7 @@
     overflow: hidden;
 }
 
-.website .container{
+.website .container {
     position: relative;
     padding-right: 1rem;
     width: auto;
@@ -51,81 +51,129 @@
     transition: all 0.3s ease;
 }
 
-.website img{
-    display: block;
-    width: 100%;
+
+
+/* ------------------------------------- MAIN ------------------------------------- */
+.website main {
+    padding: 1rem;
 }
 
-.website h1{
-    font-weight: 800;
-    font-size: 1.8rem;
+.website main :is(.section-subheader) {
+    font-size: 20px;
+    margin-top: 3rem;
 }
 
-.website h3{
-    font-size: 0.88rem;
-    font-weight: 500;
+.website main :is(.section-header) {
+    text-align: center;
+    margin-top: 2rem;
 }
 
-.website h4{
-    font-size: 0.8rem;
-}
-
-.website h5{
-    font-size: 0.77rem;
-}
-
-.website small{
-    font-size: 0.75rem;
-}
-
-.website .profile-photo{
-    width: 2.8rem;
-    height: 2.8rem;
-    border-radius: 50%;
-    overflow: hidden;
-}
-
-.website .text-muted{
+.website main :is(p) {
     color: var(--light-grey);
-}
-
-.website p{
-    color: var(--grey);
     font-size: 1.1rem;
     text-align: center;
     margin-top: 1rem;
 }
 
-.website b{
-    color: var(--grey);
+/* ------------------- TEMPLATE GRID ------------------- */
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+  margin: 40px;
+  margin-top: 3rem;
 }
 
-.website .primary{
-    color: var(--light-blue);
+.template-card {
+    position: relative;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: var(--box-shadow);
 }
 
-.website .danger{
-    color: var(--danger);
+.template-preview {
+  width: 100%;
+  height: 250px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.website .success{
-    color: var(--success);
+.template-preview img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-.website .warning{
-    color: var(--yellow);
+.template-info {
+  position: absolute;
+  padding: 1.5rem;
+  background: rgba(0,0,0,0.75);
+  top: -100%;
+  height: 100%;
+  width: 100%;
+  transition: 0.3s;
+}
+
+.template-info h3 {
+  font-size: 1.4rem;
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--white);
+}
+
+.template-info #p-template {
+  color: var(--white);
+  margin-bottom: 20px;
+}
+
+.template-info .btn {
+    background-color: var(--yellow);
+    color: var(--blue);
+    width: 100%;
+}
+
+.template-info .btn:hover {
+    background-color: rgba(255, 208, 0, 0.5);
+    border: 1px solid var(--yellow);
+    color: var(--white);
+}
+
+.template-card:hover .template-info {
+    top: 0;
+}
+
+#p-bottom{
+    color: var(--light-grey);
+    font-size: 0.9rem;
+    bottom: 1rem;
 }
 
 
 
-/* ------------------------------------- MAIN ------------------------------------- */
-
-.website main :is(.section-subheader){
-    font-size: 20px;
-    margin-top: 1.5rem;
+@media (max-width: 900px) {
+    .template-grid {
+        grid-template-columns: 1fr 1fr;
+    }
 }
 
-.website main :is(.section-header){
-    text-align: center;
+@media (max-width: 768px) {
+    .template-grid {
+      grid-template-columns: 1fr;
+    }
+    
 }
 
+@media (max-width: 600px) {
+    .template-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .template-card img {
+        height: 160px;
+    }
+}

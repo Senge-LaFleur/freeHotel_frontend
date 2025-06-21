@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Sidebar from '../../components/sidebar/sidebar.jsx'
 import Navbar2 from '../../components/navbar2/navbar2.jsx';
-import profile1 from '../../assets/images/profile1.jpg'
+import template1 from '../../assets/images/template1.png'
 import './dashboard.css'
 
 function Dashboard() {
@@ -94,52 +94,21 @@ function Dashboard() {
                         <table>
                             <thead>
                                 <tr>
-                                    <th>User</th>
-                                    <th>Date Order</th>
+                                    <th>Hotel</th>
+                                    <th>Last Modified</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>
-                                        <img src={profile1} alt="" />
-                                        <p>John Doe</p>
+                                        <img src={template1} alt="" />
+                                        <p>Hotel name</p>
                                     </td>
                                     <td>01-10-2021</td>
                                     <td><span class="status completed">Completed</span></td>
                                 </tr>
-                                <tr>
-                                    <td>
-                                        <img src={profile1} alt="" />
-                                        <p>John Doe</p>
-                                    </td>
-                                    <td>01-10-2021</td>
-                                    <td><span class="status pending">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <img src={profile1} alt="" />
-                                        <p>John Doe</p>
-                                    </td>
-                                    <td>01-10-2021</td>
-                                    <td><span class="status process">Process</span></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <img src={profile1} alt="" />
-                                        <p>John Doe</p>
-                                    </td>
-                                    <td>01-10-2021</td>
-                                    <td><span class="status pending">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <img src={profile1} alt="" />
-                                        <p>John Doe</p>
-                                    </td>
-                                    <td>01-10-2021</td>
-                                    <td><span class="status completed">Completed</span></td>
-                                </tr>
+                                
                             </tbody>
                         </table>
                     </div>

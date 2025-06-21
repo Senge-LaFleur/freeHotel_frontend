@@ -1,0 +1,243 @@
+:root {
+    --black: #333;
+    --grey: #767268;
+    --light-grey: #7d8da1;
+    --white: #fefefe;
+    --extra-light: #eff0f3;
+    --yellow: #ffd000;
+    --blue: #0b3e66;
+    --light-blue: #187fcd;
+    --danger: #ff7782;
+    --success: #41f1b6;
+    --blue-sidebar: #d1f1fd;
+    --color-light: rgba(24, 127, 205, 0.1);
+
+    --card-border-radius: 2rem;
+    --border-radius-1: 0.4rem;
+    --border-radius-2: 0.8rem;
+    --border-radius-3: 1.2rem;
+
+    --card-padding: 1.8rem;
+    --padding-1: 1.2rem;
+    --max-width: 1200px;
+    --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    --box-shadow-1: 0 2rem 3rem var(--color-light);
+}
+
+
+/* Layout */
+.template-editor {
+    display: flex;
+    height: 100vh;
+    background: #f7f7f7;
+}
+
+.editor-sidebar {
+    width: 400px;
+    background: #fff;
+    border-right: 1px solid #eee;
+    padding: 32px 24px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.editor-sidebar h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 18px;
+}
+
+.editor-sidebar .btn {
+    color: var(--black);
+}
+
+.editor-sidebar .btn:hover {
+    letter-spacing: 0;
+}
+
+.editor-sidebar .btn.preview, .editor-sidebar .btn.save {
+    background: none;
+    border: 2px solid var(--black);
+}
+
+.editor-sidebar .btn.preview:hover, .editor-sidebar .btn.save:hover {
+    background: var(--black);
+    color: var(--white);
+}
+
+.editor-sidebar .btn.publish {
+    background: var(--black);
+    color: var(--white);
+}
+
+.editor-sidebar .btn.publish:hover {
+    background: none;
+    border: 2px solid var(--black);
+    color: var(--black);
+}
+
+.editor-section {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.editor-section label {
+    font-size: 0.98rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.editor-section input[type="text"],
+.editor-section input[type="color"],
+.editor-section input {
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.editor-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.btn.publish {
+    background: var(--yellow);
+    color: var(--blue);
+}
+
+/* Preview */
+.editor-preview {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 40px 0;
+    overflow: auto;
+}
+
+.editor-logo {
+    text-align: left;
+    margin-bottom: 32px;
+}
+
+.logo-text {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.logo-slogan {
+    font-size: 1rem;
+    font-weight: 400;
+    opacity: 0.7;
+}
+
+.editor-content {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.editor-content h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 18px;
+}
+
+.editor-content p {
+    font-size: 1.3rem;
+    margin-bottom: 24px;
+}
+
+.editor-btn {
+    padding: 0.85rem 2.2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.editor-bg-image {
+    pointer-events: none;
+    user-select: none;
+    border-radius: inherit;
+}
+
+@media (max-width: 900px) {
+    .template-editor {
+        flex-direction: column;
+    }
+
+    .editor-sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #eee;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 18px 24px;
+        padding: 18px 10px;
+    }
+
+    .editor-preview {
+        padding: 18px 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .editor-sidebar {
+        padding: 10px 4px;
+        font-size: 0.95rem;
+    }
+
+    .editor-content h1 {
+        font-size: 1.5rem;
+    }
+
+    .editor-image {
+        max-width: 98vw;
+        border-radius: 10px;
+    }
+}
+
+.editor-preview-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.editor-preview-full {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+}
+
+.editor-preview-full .editor-logo,
+.editor-preview-full .editor-content {
+    margin-bottom: 0;
+}
+
+.editor-preview-full .btn {
+    position: relative;
+    z-index: 2;
+}

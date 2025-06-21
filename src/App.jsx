@@ -10,13 +10,14 @@ import Owner from './pages/auth/signUp/signUpOwner/owner.jsx'
 import Dashboard from './pages/dashboard/dashboard.jsx'
 import DashboardLayout from './layouts/dashboardLayout/dashboardLayout.jsx'
 import Website from './pages/website/website.jsx'
+import TemplateEditor from './pages/website/templateEditor.jsx'
 import './App.css'
 
 function App() {
 
   return (
     <div className="body">
-      
+
       <Routes>
         <Route path="/" element={<HomeLayout />}>
           <Route index element={<Home />} />
@@ -26,9 +27,10 @@ function App() {
         <Route path="/signUp" element={<SignUp />} />
         <Route path="/client" element={<Client />} />
         <Route path="/owner" element={<Owner />} />
-        
+
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/website" element={<Website />} />
+        <Route path="/editor/:templateId" element={<TemplateEditor />} />
       </Routes>
 
     </div>

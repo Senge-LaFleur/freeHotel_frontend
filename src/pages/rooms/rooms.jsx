@@ -21,7 +21,6 @@ function Rooms() {
         <main>
           <h2 class="section-header">Popular Hotel Deals Right Now</h2>
           <section></section>
-          <section></section>
         </main>
     </div>
   )
