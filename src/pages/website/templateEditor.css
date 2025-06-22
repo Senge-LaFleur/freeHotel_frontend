@@ -426,21 +426,95 @@
 
 .editor-preview-wrapper.mobile {
     min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2rem 0;
+    height: 100vh;
+    max-height: 100vh;
+    overflow-y: auto;
 }
 
 .editor-preview-wrapper.mobile .editor-preview {
     width: 375px;
     min-width: 320px;
     max-width: 400px;
-    min-height: 700px;
-    max-height: 800px;
     border-radius: 32px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
-    overflow: hidden;
+    overflow-y: auto;
     border: 6px solid #222;
     background: #fff;
     margin: 0 auto;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    height: 100vh;
+    max-height: 100vh;
+}
+
+/* Make all preview sections single-column and full width in mobile mode */
+.editor-preview-wrapper.mobile .hero-section-preview,
+.editor-preview-wrapper.mobile .about-section-preview,
+.editor-preview-wrapper.mobile .amenities-section-preview,
+.editor-preview-wrapper.mobile .rooms-section-preview,
+.editor-preview-wrapper.mobile .footer-section-preview {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.editor-preview-wrapper.mobile .editor-content,
+.editor-preview-wrapper.mobile .about-section-preview>div,
+.editor-preview-wrapper.mobile .amenities-section-preview>div,
+.editor-preview-wrapper.mobile .rooms-section-preview>div,
+.editor-preview-wrapper.mobile .footer-section-preview>div {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Responsive text and images for mobile preview */
+.editor-preview-wrapper.mobile h1,
+.editor-preview-wrapper.mobile h2 {
+    font-size: 1.3rem !important;
+    text-align: center;
+}
+
+.editor-preview-wrapper.mobile p,
+.editor-preview-wrapper.mobile .editor-content p {
+    font-size: 1rem !important;
+    text-align: center;
+}
+
+.editor-preview-wrapper.mobile img {
+    max-width: 95%;
+    height: auto;
+    border-radius: 10px;
+    display: block;
+    margin: 0.5rem auto;
+}
+
+/* Ensure Book Now and other buttons are full width on mobile */
+.editor-preview-wrapper.mobile .editor-btn {
+    width: 100%;
+    max-width: 320px;
+    margin: 0.5rem auto;
+    font-size: 1.05rem;
+}
+
+/* Hide scrollbars for a cleaner phone look */
+.editor-preview-wrapper.mobile .editor-preview::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
+
+.editor-preview-wrapper.mobile .editor-preview {
+    scrollbar-width: none;
 }
 
 /* Modal preview for mobile/desktop */
