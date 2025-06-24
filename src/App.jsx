@@ -11,6 +11,7 @@ import Dashboard from './pages/dashboard/dashboard.jsx'
 import DashboardLayout from './layouts/dashboardLayout/dashboardLayout.jsx'
 import Website from './pages/website/website.jsx'
 import TemplateEditor from './pages/website/templateEditor.jsx'
+import HotelPreview from './pages/website/HotelPreview.jsx';
 import Payment from './pages/payments/payment.jsx';
 import Plan from './pages/payments/websitePlan/plan.jsx';
 import './App.css'
@@ -35,6 +36,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/website" element={<Website />} />
         <Route path="/editor/:templateId" element={<TemplateEditor />} />
+        <Route path="/website/preview/:hotelId" element={<HotelPreview />} />
       </Routes>
 
     </div>

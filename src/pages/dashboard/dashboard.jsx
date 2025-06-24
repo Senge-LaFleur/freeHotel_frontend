@@ -70,12 +70,12 @@ function Dashboard() {
 
     // Action handlers
     const handleView = (hotelId) => {
-        // Implement full preview logic here
-        alert('View website for hotel ID: ' + hotelId);
+        navigate(`/website/preview/${hotelId}`);
     };
-    const handleEdit = (hotelId) => {
-        // Navigate to templateEditor for this hotel
-        navigate(`/website/templateEditor/${templateId || 'luxury-hotel'}/${hotelId}`);
+    const handleEdit = (hotel) => {
+        // Use the saved templateId if available, or fallback to a default
+        const templateId = hotel.template_data?.templateId || 'luxury-hotel';
+        navigate(`/website/templateEditor/${templateId}/${hotel.id}`);
     };
     const handleDelete = async (hotelId) => {
         if (window.confirm('Are you sure you want to delete this hotel and all its data?')) {
@@ -205,7 +205,7 @@ function Dashboard() {
                                             </td>
                                             <td className="action-element">
                                                 <FontAwesomeIcon icon={['fas', 'fa-eye']} title="view website" onClick={() => handleView(hotel.id)} style={{ cursor: 'pointer', marginRight: '8px' }} />
-                                                <FontAwesomeIcon icon={['fas', 'fa-pencil']} title="edit website" onClick={() => handleEdit(hotel.id)} style={{ cursor: 'pointer', marginRight: '8px' }} />
+                                                <FontAwesomeIcon icon={['fas', 'fa-pencil']} title="edit website" onClick={() => handleEdit(hotel)} style={{ cursor: 'pointer', marginRight: '8px' }} />
                                                 <FontAwesomeIcon icon={['fas', 'fa-trash']} title="delete website" onClick={() => handleDelete(hotel.id)} style={{ cursor: 'pointer' }} />
                                             </td>
                                         </tr>
