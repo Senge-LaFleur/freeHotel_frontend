@@ -14,14 +14,14 @@ function BookingForm() {
             </div>
             <div class="form-group">
                 <div class="input-group">
-                    <input type="text" />
+                    <input type="date" />
                     <label for="">Check In</label>
                 </div>
                 <p>Add Date</p>
             </div>
             <div class="form-group">
                 <div class="input-group">
-                    <input type="text" />
+                    <input type="date" />
                     <label for="">Check Out</label>
                 </div>
                 <p>Add Date</p>

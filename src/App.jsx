@@ -11,6 +11,8 @@ import Dashboard from './pages/dashboard/dashboard.jsx'
 import DashboardLayout from './layouts/dashboardLayout/dashboardLayout.jsx'
 import Website from './pages/website/website.jsx'
 import TemplateEditor from './pages/website/templateEditor.jsx'
+import Payment from './pages/payments/payment.jsx';
+import Plan from './pages/payments/websitePlan/plan.jsx';
 import './App.css'
 
 function App() {
@@ -27,6 +29,8 @@ function App() {
         <Route path="/signUp" element={<SignUp />} />
         <Route path="/client" element={<Client />} />
         <Route path="/owner" element={<Owner />} />
+        <Route path="/payment" element={<Payment />} />
+        <Route path="/plans" element={<Plan />} />
 
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/website" element={<Website />} />

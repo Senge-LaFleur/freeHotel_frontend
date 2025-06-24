@@ -28,23 +28,37 @@
 /* Layout */
 .template-editor {
     display: flex;
-    height: fit-content;
+    flex: 1;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100vh;
     width: 100vw;
     background: #f7f7f7;
 }
 
-.editor-sidebar {
-    width: 600px;
-    height: fit-content;
-    background: #fff;
-    border-right: 1px solid #eee;
-    padding: 20px 15px;
-    overflow-y: auto;
-    max-height: calc(100% - 64px);
+.editor-body-container {
     display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.editor-sidebar {
+    background: var(--white);
+    border-right: 1px solid #eee;
+    padding: 0 15px;
+    padding-top: 20px;
+    overflow-y: auto;
+    min-height: calc(100vh - 64px);
+    display: flex;
+    width: 500px;
     flex-direction: column;
     gap: 18px;
     margin-top: 64px;
+    scroll-behavior: smooth;
+}
+
+.editor-sidebar-title {
+    border-bottom: 1px solid var(--grey);
 }
 
 .editor-sidebar h2 {
@@ -53,35 +67,41 @@
     margin-bottom: 18px;
 }
 
-.editor-sidebar .btn {
+.editor-sidebar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5rem;
+    padding-bottom: 1rem;
+}
+
+.editor-sidebar-btn .btn {
     color: var(--black);
 }
 
-.editor-sidebar .btn:hover {
+.editor-sidebar-btn .btn:hover {
     letter-spacing: 0;
 }
 
-.editor-sidebar .btn.preview,
-.editor-sidebar .btn.save {
+.editor-sidebar-btn .btn.preview,
+.editor-sidebar-btn .btn.save {
     background: none;
     border: 2px solid var(--black);
 }
 
-.editor-sidebar .btn.preview:hover,
-.editor-sidebar .btn.save:hover {
+.editor-sidebar-btn .btn.preview:hover,
+.editor-sidebar-btn .btn.save:hover {
     background: var(--black);
     color: var(--white);
 }
 
-.editor-sidebar .btn.publish {
-    background: var(--black);
-    color: var(--white);
-}
-
-.editor-sidebar .btn.publish:hover {
-    background: none;
-    border: 2px solid var(--black);
+.editor-sidebar-btn .btn.publish {
+    background: var(--yellow);
     color: var(--black);
+}
+
+.editor-sidebar-btn .btn.publish:hover {
+    border: 2px solid var(--black);
 }
 
 .editor-section {
@@ -117,9 +137,14 @@
     color: var(--blue);
 }
 
+
+.sidebar-section-container {
+    overflow-y: auto;
+}
+
+
 /* Preview */
 .editor-preview {
-    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -375,17 +400,28 @@
 /* Offset for fixed navbar */
 .editor-preview-main {
     margin-top: 64px;
-    width: 100%;
+    padding: 1rem;
     overflow-y: auto;
+    flex: 1;
+    scroll-behavior: smooth;
+    height: 100%;
 }
 
 /* Preview mode toggle */
 .preview-mode-toggle {
+    position: fixed;
+    width: 100%;
+    height: 70px;
+    ;
+    top: 64px;
     display: flex;
     align-items: center;
     gap: 1.2rem;
     justify-content: center;
-    padding: 2rem;
+    padding: .6rem;
+    z-index: 1000;
+    background: #f7f7f7;
+    border-bottom: 1px solid var(--grey);
 }
 
 .toggle-btn {
@@ -413,7 +449,9 @@
     align-items: flex-start;
     width: 100%;
     min-height: 80vh;
-    padding: 1rem;
+    padding: 2rem;
+    margin: 2rem 0;
+    overflow-y: auto;
 }
 
 .editor-preview-wrapper.desktop .editor-preview {
@@ -449,11 +487,11 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    height: 100vh;
-    max-height: 100vh;
+    /* height: 100vh;
+    max-height: 100vh; */
 }
 
-/* Make all preview sections single-column and full width in mobile mode */
+
 .editor-preview-wrapper.mobile .hero-section-preview,
 .editor-preview-wrapper.mobile .about-section-preview,
 .editor-preview-wrapper.mobile .amenities-section-preview,
@@ -573,7 +611,7 @@
 
 .sidebar-section-icon {
     font-size: 1.2rem;
-    color: var(--light-blue);
+    color: var(--blue);
     min-width: 24px;
     display: flex;
     align-items: center;
@@ -591,7 +629,10 @@
 }
 
 .sidebar-section.expanded {
-    height: 100%;
+    height: fit-content;
+    overflow-x: auto;
+    overflow-y: auto;
+    white-space: nowrap;
 }
 
 .sidebar-section.expanded .sidebar-section-arrow {

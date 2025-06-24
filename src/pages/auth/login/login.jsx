@@ -1,40 +1,76 @@
-import React, { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom'
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './login.css'
 
 const Login = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        const credentials = { email, password };
+        const res = await fetch('http://localhost:8000/api/auth/token-auth/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(credentials),
+        });
+        const data = await res.json();
+        if (res.ok && data.token) {
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('userRole', data.user.is_hotel_owner ? 'ADMIN' : 'CLIENT');
+            // Redirect based on role
+            if (data.user && data.user.is_hotel_owner) {
+                navigate('/dashboard');
+            } else {
+                navigate('/rooms');
+            }
+        } else {
+            alert('Login failed: ' + (data.detail || 'Unknown error'));
+        }
+    };
 
     return (
-        <div class="login-form-container">
-            <form action="">
-                <h2 class="section-header login-form-header">Login</h2>
-                <div class="login-content">
-                    <div class="box-container">
+        <div className="login-form-container">
+            <form onSubmit={handleLogin}>
+                <h2 className="section-header login-form-header">Login</h2>
+                <div className="login-content">
+                    <div className="box-container">
                         <FontAwesomeIcon icon={['fas', 'fa-envelope']} />
-                        <input type="email" class="box" placeholder="Enter your Email" />
+                        <input
+                            type="email"
+                            className="box"
+                            placeholder="Enter your Email"
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
+                            required
+                        />
                     </div>
-                    <div class="box-container">
+                    <div className="box-container">
                         <FontAwesomeIcon icon={['fas', 'fa-lock']} />
-                        <input type="password" class="box" placeholder="Enter your Password" />
+                        <input
+                            type="password"
+                            className="box"
+                            placeholder="Enter your Password"
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
+                            required
+                        />
                     </div>
-                    <div class="buttons">
-                        <Link to="/" class="link btn">Log in</Link>
-                        <Link to="/" class="link btn">Cancel</Link>
+                    <div className="buttons">
+                        <button type="submit" className="link btn">Log in</button>
+                        <Link to="/" className="link btn">Cancel</Link>
                     </div>
-                    <div class="form-links">
-                        <Link to="/" class="link"><p>Forgot password? <span>Click Here</span></p></Link>
-                        <Link to="/signUp" class="link"><p>Do not have an account? <span>Sign up</span></p></Link>
+                    <div className="form-links">
+                        <Link to="/" className="link"><p>Forgot password? <span>Click Here</span></p></Link>
+                        <Link to="/signUp" className="link"><p>Do not have an account? <span>Sign up</span></p></Link>
                     </div>
                 </div>
             </form>
-
         </div>
-
-
-  )
-} 
-
+    );
+}
 
 export default Login;
 

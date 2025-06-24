@@ -207,16 +207,34 @@
 	border-radius: 20px;
 	font-weight: 700;
 }
-#content main .table-data .order table tr td .status.completed {
-	background: var(--light-blue);
+#content main .table-data .order table tr td .status.published {
+	background: var(--success);
 }
-#content main .table-data .order table tr td .status.process {
+#content main .table-data .order table tr td .status.incomplete {
 	background: var(--yellow);
 }
-#content main .table-data .order table tr td .status.pending {
-	background: var(--danger);
+
+#content main .table-data .order table tr .action-element {
+	display: flex;
+	font-size: 1.5rem;
+	gap: 1rem;
 }
 
+#content main .table-data .order table tr .action-element .fa-pencil {
+	color: var(--light-blue);
+}
+
+#content main .table-data .order table tr .action-element .fa-trash{
+	color: var(--danger);
+}
+
+#content main .table-data .order table tr .action-element .fa-eye:hover,
+#content main .table-data .order table tr .action-element .fa-pencil:hover,
+#content main .table-data .order table tr .action-element .fa-trash:hover {
+	cursor: pointer;
+	font-size: 1.6rem;
+	transition: 0.2s;
+}
 
 #content main .table-data .todo {
 	flex-grow: 1;
