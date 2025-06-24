@@ -36,6 +36,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/website" element={<Website />} />
         <Route path="/editor/:templateId" element={<TemplateEditor />} />
+        <Route path="/website/templateEditor/:templateId/:hotelId" element={<TemplateEditor />} />
         <Route path="/website/preview/:hotelId" element={<HotelPreview />} />
       </Routes>
 

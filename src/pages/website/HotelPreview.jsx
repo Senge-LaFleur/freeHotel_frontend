@@ -22,17 +22,6 @@ export default function HotelPreview() {
             } finally {
                 setLoading(false);
             }
-            // try {
-            //     const res = await fetch(`http://localhost:8000/api/hotels/${hotelId}/`);
-            //     if (res.ok) {
-            //         const data = await res.json();
-            //         setHotel(data);
-            //     }
-            // } catch (err) {
-            //     // handle error
-            // } finally {
-            //     setLoading(false);
-            // }
         }
         fetchHotel();
     }, [hotelId]);
