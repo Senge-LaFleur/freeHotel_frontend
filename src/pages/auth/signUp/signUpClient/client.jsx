@@ -44,9 +44,9 @@ const Client = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username_or_email: form.email, password: form.password })
             });
-            if (!loginRes.ok) {
-                throw new Error('Login failed');
-            }
+            // if (!loginRes.ok) {
+            //     throw new Error('Login failed');
+            // }
             const loginData = await loginRes.json();
             const token = loginData.token;
             // 3. Success: store token, alert, redirect

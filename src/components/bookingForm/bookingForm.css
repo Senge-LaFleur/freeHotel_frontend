@@ -63,6 +63,7 @@
     background: none;
     color: var(--blue);
     border: 2px solid var(--blue);
+    text-decoration: none;
 }
 
 .booking-container .btn:hover{
@@ -70,15 +71,27 @@
     color: var(--white);
 }
 
-
-
-@media(max-width: 768px){
+@media(max-width: 988px){
     .booking-container{
         position: relative;
     }
 
     .booking-container form{
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media(max-width: 768px){
+  
+    .booking-container form{
         grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width: 576px){
+
+    .booking-container form{
+        grid-template-columns: repeat(1, 1fr);
     }
 }
 

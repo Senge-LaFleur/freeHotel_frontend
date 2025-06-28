@@ -296,6 +296,7 @@ export default function TemplateEditor() {
                 fields,
                 amenities,
                 rooms,
+                socialThumb,
                 // ...add other sidebar state as needed
             },
             status: 'incomplete',
@@ -330,6 +331,24 @@ export default function TemplateEditor() {
                 alert('Please save your hotel first!');
                 return;
             }
+            // Update hotel with latest data including socialThumb before publishing
+            const hotelData = {
+                name: footerName,
+                logo_text: footerName,
+                slogan: footerSlogan,
+                footer_email: footerContacts.find(c => c.type === 'email')?.value,
+                footer_phone: footerContacts.find(c => c.type === 'phone')?.value,
+                domain_name: domain,
+                template_data: {
+                    fields,
+                    amenities,
+                    rooms,
+                    socialThumb,
+                    // ...add other sidebar state as needed
+                },
+                status: 'published',
+            };
+            await updateHotel(hotelId, hotelData, userToken);
             await publishHotel(hotelId, userToken);
             alert('Hotel published!');
             navigate('/dashboard');

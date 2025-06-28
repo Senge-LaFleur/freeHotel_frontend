@@ -9,8 +9,15 @@
     --box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
-.header-image-container{
+/* .header{
+    width: 100%;
+    margin: 0;
+    padding: 0;
+} */
+
+.header .header-container .header-image-container{
     position: relative;
+    top: 70px;
     min-height: 500px;
     background-image: linear-gradient(to right, rgba(44,56,85,.9), rgba(100,125,187,.1)),
     url('../../assets/images/outside9.jpg');
@@ -19,12 +26,12 @@
     background-repeat: no-repeat;
 }
 
-.header-content{
+.header .header-container .header-image-container .header-content{
     max-width: 600px;
     padding: 5rem 2rem;
 }
 
-.header-content h1{
+.header .header-container .header-image-container .header-content h1{
     margin-bottom: 1rem;
     font-size: 3.5rem;
     line-height: 4rem;
@@ -32,7 +39,7 @@
     color: var(--white);
 }
 
-.header-content p{
+.header .header-container .header-image-container .header-content p{
     color: var(--extra-light);
 }
 
@@ -41,12 +48,12 @@
 
 
 @media(max-width: 768px){
-    .header-content{
+    .header .header-container .header-image-container .header-content{
         max-width: 600px;
         padding: 5rem 2rem;
     }
     
-    .header-content h1{
+    .header .header-container .header-image-container .header-content h1{
         margin-bottom: 1rem;
         font-size: 2.5rem;
         line-height: 3rem;

@@ -99,7 +99,7 @@ function Rooms() {
                 <div className="hotel-pricing">
                   <div className="price">${hotel.price}</div>
                   <div className="per-night">per night</div>
-                  <button className="view-deal-btn">View Deal</button>
+                  <button className="view-deal-btn">Book Now</button>
                   <div className="provider-count">10+ providers</div>
                 </div>
               </div>

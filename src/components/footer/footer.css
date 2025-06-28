@@ -47,7 +47,8 @@
 }
 
 .footer-col .btn{
-    border: 2px solid var(--yellow)
+    border: 2px solid var(--yellow);
+    text-decoration: none;
 }
 
 .footer-links{

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import './bookingForm.css';
 
 function BookingForm() {
@@ -40,7 +41,7 @@ function BookingForm() {
                 </div>
                 <p>Add Kids</p>
             </div>
-            <button class="btn">Find Rooms</button>
+            <Link to="/rooms" class="btn">Find Rooms</Link>
         </form>
     </div>
   )

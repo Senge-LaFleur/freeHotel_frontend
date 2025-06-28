@@ -24,7 +24,7 @@ function Footer(){
                             payment options, planning your next getaway has never been easier. Book now and enjoy 
                             a seamless travel experience!
                         </p>
-                        <button class="btn">Book Now</button>
+                        <Link to="/rooms" class="btn">Book Now</Link>
                     </div>
                     <div class="footer-col">
                         <h4>QUICK LINKS</h4>

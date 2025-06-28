@@ -7,11 +7,11 @@ import './header.css'
 function Header(){
 
     return(
-        <div>
+        <div class="header">
             <Navbar />
-            <section class="header-container" id="header">
-                <div class="header-image-container">
-                    <div class="header-content">
+            <section className="header-container">
+                <div className="header-image-container">
+                    <div className="header-content">
                         <h1>Enjoy your Dream Vacation</h1>
                         <p>Book Hotels and Stay Packages at Lowest Price.</p>
                     </div>

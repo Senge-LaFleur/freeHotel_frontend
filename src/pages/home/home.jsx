@@ -49,7 +49,7 @@ function Home(){
                                         <p><br />May 12 - May 18</p>
                                     </div>
                                 </div>
-                                <button class="btn">Check Deal</button>
+                                <button class="btn">Visit Website</button>
                             </div>
                         </div>
                     </div>
@@ -80,7 +80,7 @@ function Home(){
                                         <p><br />May 12 - May 18</p>
                                     </div>
                                 </div>
-                                <button class="btn">Check Deal</button>
+                                <button class="btn">Visit Website</button>
                             </div>
                         </div>
                     </div>
@@ -111,7 +111,7 @@ function Home(){
                                         <p><br />May 12 - May 18</p>
                                     </div>
                                 </div>
-                                <button class="btn">Check Deal</button>
+                                <button class="btn">Visit Website</button>
                             </div>
                         </div>
                     </div>
@@ -142,7 +142,7 @@ function Home(){
                                         <p><br />May 12 - May 18</p>
                                     </div>
                                 </div>
-                                <button class="btn">Check Deal</button>
+                                <button class="btn">Visit Website</button>
                             </div>
                         </div>
                     </div>
@@ -173,7 +173,7 @@ function Home(){
                                         <p><br />May 12 - May 18</p>
                                     </div>
                                 </div>
-                                <button class="btn">Check Deal</button>
+                                <button class="btn">Visit Website</button>
                             </div>
                         </div>
                     </div>
@@ -204,7 +204,7 @@ function Home(){
                                         <p><br />May 12 - May 18</p>
                                     </div>
                                 </div>
-                                <button class="btn">Check Deal</button>
+                                <button class="btn">Visit Website</button>
                             </div>
                         </div>
                     </div>
