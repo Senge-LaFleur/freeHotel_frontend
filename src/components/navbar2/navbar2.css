@@ -28,7 +28,7 @@
 }
 
 
-#navbar2 nav {
+#navbar2 .navbar2 {
 	height: 56px;
 	background: var(--white);
     border: 2px solid var(--extra-light);
@@ -43,17 +43,17 @@
 	z-index: 1000;
 }
 
-#navbar2 nav form {
+#navbar2 .navbar2 form {
 	max-width: 400px;
 	width: 100%;
 	margin-right: auto;
 }
-#navbar2 nav form .form-input {
+#navbar2 .navbar2 form .form-input {
 	display: flex;
 	align-items: center;
 	height: 36px;
 }
-#navbar2 nav form .form-input input {
+#navbar2 .navbar2 form .form-input input {
 	flex-grow: 1;
 	padding: 0 16px;
 	height: 100%;
@@ -64,7 +64,7 @@
 	width: 100%;
 	color: var(--black);
 }
-#navbar2 nav form .form-input button {
+#navbar2 .navbar2 form .form-input button {
 	width: 36px;
 	height: 100%;
 	display: flex;
@@ -78,14 +78,14 @@
 	border-radius: 0 36px 36px 0;
 	cursor: pointer;
 }
-#navbar2 nav .notification {
+#navbar2 .navbar2 .notification {
 	font-size: 20px;
 	position: relative;
 }
-#navbar2 nav .notification span{
+#navbar2 .navbar2 .notification span{
     color: var(--yellow);
 }
-#navbar2 nav .notification .num {
+#navbar2 .navbar2 .notification .num {
 	position: absolute;
 	top: -6px;
 	right: -6px;
@@ -101,13 +101,13 @@
 	justify-content: center;
 	align-items: center;
 }
-#navbar2 nav .profile img {
+#navbar2 .navbar2 .profile img {
 	width: 36px;
 	height: 36px;
 	object-fit: cover;
 	border-radius: 50%;
 }
-#navbar2 nav .switch-mode {
+#navbar2 .navbar2 .switch-mode {
 	display: block;
 	min-width: 50px;
 	height: 25px;
@@ -116,7 +116,7 @@
 	cursor: pointer;
 	position: relative;
 }
-#navbar2 nav .switch-mode::before {
+#navbar2 .navbar2 .switch-mode::before {
 	content: '';
 	position: absolute;
 	top: 2px;
@@ -127,6 +127,6 @@
 	border-radius: 50%;
 	transition: all .3s ease;
 }
-#navbar2 nav #switch-mode:checked + .switch-mode::before {
+#navbar2 .navbar2 #switch-mode:checked + .switch-mode::before {
 	left: calc(100% - (25px - 4px) - 2px);
 }

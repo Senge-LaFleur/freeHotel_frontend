@@ -44,7 +44,7 @@ const Owner = () => {
             const loginRes = await fetch(`${API_BASE}/token-auth/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username_or_email: form.email, password: form.password })
+                body: JSON.stringify({ username: form.username, password: form.password })
             });
             if (!loginRes.ok) {
                 throw new Error('Login failed');

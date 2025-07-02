@@ -60,3 +60,59 @@ export async function deleteHotel(id, token) {
   });
   return res;
 }
+
+// Room API
+export async function getRooms(hotelId, token) {
+  const res = await fetch(`${API_BASE}${hotelId}/rooms/`, {
+    headers: token ? { Authorization: `Token ${token}` } : {},
+  });
+  return res.json();
+}
+
+export async function createRoom(hotelId, data, token) {
+  let body, headers;
+  if (data instanceof FormData) {
+    body = data;
+    headers = { Authorization: `Token ${token}` };
+  } else {
+    body = JSON.stringify(data);
+    headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Token ${token}`,
+    };
+  }
+  const res = await fetch(`${API_BASE}${hotelId}/rooms/`, {
+    method: "POST",
+    headers,
+    body,
+  });
+  return res.json();
+}
+
+export async function updateRoom(hotelId, roomId, data, token) {
+  let body, headers;
+  if (data instanceof FormData) {
+    body = data;
+    headers = { Authorization: `Token ${token}` };
+  } else {
+    body = JSON.stringify(data);
+    headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Token ${token}`,
+    };
+  }
+  const res = await fetch(`${API_BASE}${hotelId}/rooms/${roomId}/`, {
+    method: "PUT",
+    headers,
+    body,
+  });
+  return res.json();
+}
+
+export async function deleteRoom(hotelId, roomId, token) {
+  const res = await fetch(`${API_BASE}${hotelId}/rooms/${roomId}/`, {
+    method: "DELETE",
+    headers: { Authorization: `Token ${token}` },
+  });
+  return res;
+}

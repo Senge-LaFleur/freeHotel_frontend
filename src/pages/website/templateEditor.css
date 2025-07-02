@@ -151,8 +151,8 @@
     justify-content: center;
     position: relative;
     padding: 40px 0;
-    margin: 1rem;
-    overflow: auto;
+    margin: 0;
+    overflow-y: auto;
 }
 
 .editor-logo {
@@ -318,7 +318,6 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 2.5rem;
-    height: 64px;
     position: fixed;
     top: 0;
     left: 0;
@@ -400,10 +399,10 @@
 /* Offset for fixed navbar */
 .editor-preview-main {
     margin-top: 64px;
-    padding: 1rem;
     overflow-y: auto;
     flex: 1;
     scroll-behavior: smooth;
+    width: 100%;
     height: 100%;
 }
 
@@ -412,15 +411,13 @@
     position: fixed;
     width: 100%;
     height: 70px;
-    ;
-    top: 64px;
     display: flex;
     align-items: center;
     gap: 1.2rem;
     justify-content: center;
     padding: .6rem;
     z-index: 1000;
-    background: #f7f7f7;
+    background: var(--white);
     border-bottom: 1px solid var(--grey);
 }
 
@@ -448,17 +445,14 @@
     justify-content: center;
     align-items: flex-start;
     width: 100%;
-    min-height: 80vh;
-    padding: 2rem;
-    margin: 2rem 0;
-    overflow-y: auto;
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
 }
 
 .editor-preview-wrapper.desktop .editor-preview {
     width: 100%;
-    max-width: 1200px;
     min-height: 600px;
-    border-radius: 18px;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
 }
 
@@ -487,8 +481,6 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    /* height: 100vh;
-    max-height: 100vh; */
 }
 
 
@@ -669,4 +661,33 @@
 .sidebar-section-content::-webkit-scrollbar-track {
     background: #f4f4f4;
     border-radius: 6px;
+}
+
+.styled-select {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1.5px solid #d1d5db;
+    background: #f9fafb;
+    font-size: 1rem;
+    color: #222;
+    outline: none;
+    transition: border 0.15s, box-shadow 0.15s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    margin: 0 4px;
+    min-width: 100px;
+}
+
+.styled-select:focus {
+    border-color: var(--light-blue, #3b82f6);
+    background: #fff;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.12);
+}
+
+.styled-select:hover {
+    border-color: #a0aec0;
+}
+
+.styled-select option {
+    background: #fff;
+    color: #222;
 }

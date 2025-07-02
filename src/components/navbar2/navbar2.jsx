@@ -7,7 +7,7 @@ import './navbar2.css'
 function Navbar2(){
     return (
         <div id="navbar2">
-            <nav>
+            <nav class="navbar2">
                 <form action="/">
                     <div class="form-input">
                         <input type="search" placeholder="Search..." />

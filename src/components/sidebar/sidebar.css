@@ -274,6 +274,7 @@ aside .sidebar .side-links .side-link:hover {
 
 #settings {
     margin-bottom: 3rem;
+    color: var(--light-grey);
 }
 
 #log-out{

@@ -15,7 +15,7 @@ function Header(){
                         <h1>Enjoy your Dream Vacation</h1>
                         <p>Book Hotels and Stay Packages at Lowest Price.</p>
                     </div>
-                    <BookingForm />
+                    {/* <BookingForm /> */}
                 </div>
             </section>
         </div>

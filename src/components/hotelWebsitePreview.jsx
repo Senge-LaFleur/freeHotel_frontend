@@ -1,5 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import ReservationModal from './ReservationModal.jsx';
+import { createReservation } from '../services/reservationApi';
+
 
 export default function HotelWebsitePreview({
   fields = {},
@@ -39,6 +42,7 @@ export default function HotelWebsitePreview({
   footerBgColor = '#222',
   footerPadding = 32,
   previewMode = 'desktop',
+  footerLocation = '',
 }) {
   const [isBtnHovered, setIsBtnHovered] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -46,9 +50,103 @@ export default function HotelWebsitePreview({
   const amenitiesSectionRef = useRef(null);
   const roomsSectionRef = useRef(null);
 
+  // Add local state for room filters
+  const [selectedType, setSelectedType] = useState(roomFilters.type || (roomFilterOptions.type && roomFilterOptions.type[0]) || 'Standard');
+  const [selectedPrice, setSelectedPrice] = useState(roomFilters.price || (roomFilterOptions.price && roomFilterOptions.price[0]) || 'under99');
+  const [selectedBeds, setSelectedBeds] = useState(roomFilters.beds || (roomFilterOptions.beds && roomFilterOptions.beds[0]) || '1');
+
+  // Update filter state if roomFilterOptions changes
+  React.useEffect(() => {
+    if (roomFilterOptions.type && !roomFilterOptions.type.includes(selectedType)) {
+      setSelectedType(roomFilterOptions.type[0] || '');
+    }
+  }, [roomFilterOptions.type]);
+
+  // Update filter options for price
+  const priceOptions = [
+    { value: 'All', label: 'All' },
+    { value: 'Under100', label: 'Under 100' },
+    { value: '100-299', label: '100-299' },
+    { value: '300-499', label: '300-499' },
+    { value: '500+', label: '500+' },
+  ];
+
+  // Filtering logic
+  const filteredRooms = rooms.filter(r => {
+    let match = true;
+    // Type filter
+    if (selectedType && selectedType !== 'All' && r.room_type && r.room_type !== selectedType) match = false;
+    // Capacity filter
+    if (selectedBeds && selectedBeds !== 'All' && String(r.capacity) !== String(selectedBeds)) match = false;
+    // Price filter
+    if (selectedPrice && selectedPrice !== 'All') {
+      const price = Number(r.price_per_night || r.price);
+      if (selectedPrice === 'Under100' && price >= 100) match = false;
+      if (selectedPrice === '100-299' && (price < 100 || price > 299)) match = false;
+      if (selectedPrice === '300-499' && (price < 300 || price > 499)) match = false;
+      if (selectedPrice === '500+' && price < 500) match = false;
+    }
+    return match;
+  });
+
+  const [reservationModal, setReservationModal] = useState({ open: false, room: null });
+  const [reservationForm, setReservationForm] = useState({
+    checkIn: '',
+    checkOut: '',
+    guests: 1,
+    client_name: '',
+    client_email: '',
+    client_phone: '',
+  });
+  const [bookingLoading, setBookingLoading] = useState(false);
+  const [bookingSuccess, setBookingSuccess] = useState(false);
+  const [bookingError, setBookingError] = useState('');
+
+  // Handler to open modal for a room
+  function handleBookNow(room) {
+    setReservationForm({
+      checkIn: '',
+      checkOut: '',
+      guests: 1,
+      client_name: '',
+      client_email: '',
+      client_phone: '',
+    });
+    setReservationModal({ open: true, room });
+  }
+
+  // Handler for reservation submit
+  async function handleReservationSubmit(e) {
+    e.preventDefault();
+    setBookingLoading(true);
+    setBookingError('');
+    try {
+      const token = localStorage.getItem('token');
+      await createReservation({
+        room: reservationModal.room.id,
+        check_in: reservationForm.checkIn,
+        check_out: reservationForm.checkOut,
+        guests: Number(reservationForm.guests),
+        price: Number(reservationModal.room.price_per_night || reservationModal.room.price),
+        room_image: reservationModal.room.image,
+        client_name: reservationForm.client_name,
+        client_email: reservationForm.client_email,
+        client_phone: reservationForm.client_phone,
+      }, token);
+      setBookingSuccess(true);
+      setReservationModal({ open: false, room: null });
+      // Optionally, re-fetch rooms from backend here if you have a fetchRoomsFromBackend function
+      // await fetchRoomsFromBackend();
+    } catch (err) {
+      setBookingError('Reservation failed: ' + (err.message || 'Unknown error'));
+    } finally {
+      setBookingLoading(false);
+    }
+  }
+
   return (
     <div className={`editor-preview-main`}>
-      <div className="preview-mode-toggle" style={{ display: 'none' }} />
+      {/* <div className="preview-mode-toggle" style={{ display: 'none' }} /> */}
       <div className={`editor-preview-wrapper ${previewMode}`}>
         <div
           className="editor-preview"
@@ -266,97 +364,40 @@ export default function HotelWebsitePreview({
               }}
             >
               {/* Filtering form */}
-              <form
-                className="room-filter-form"
-                style={{
-                  display: 'flex',
-                  gap: '1.2rem',
-                  justifyContent: 'center',
-                  marginBottom: '2rem',
-                  flexWrap: 'wrap',
-                  background: '#fff',
-                  borderRadius: 16,
-                  boxShadow: '0 2px 12px rgba(0,0,0,0.07)',
-                  padding: '1.1rem 1.5rem',
-                  alignItems: 'center',
-                  minWidth: 220,
-                  maxWidth: 520,
-                  marginLeft: 'auto',
-                  marginRight: 'auto',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <FontAwesomeIcon icon={["fas", "fa-bed"]} style={{ color: 'var(--blue)', fontSize: '1.1rem' }} />
-                  <select
-                    value={roomFilters.type}
-                    onChange={() => { }}
-                    style={{
-                      border: '1px solid #e0e6ed',
-                      borderRadius: 8,
-                      padding: '0.4rem 1.1rem',
-                      fontSize: '1rem',
-                      background: '#f7fafd',
-                      color: '#222',
-                      outline: 'none',
-                      minWidth: 90,
-                    }}
-                    disabled
-                  >
-                    {roomFilterOptions.type.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-                  </select>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <FontAwesomeIcon icon={["fas", "fa-dollar-sign"]} style={{ color: 'var(--blue)', fontSize: '1.1rem' }} />
-                  <select
-                    value={roomFilters.price}
-                    onChange={() => { }}
-                    style={{
-                      border: '1px solid #e0e6ed',
-                      borderRadius: 8,
-                      padding: '0.4rem 1.1rem',
-                      fontSize: '1rem',
-                      background: '#f7fafd',
-                      color: '#222',
-                      outline: 'none',
-                      minWidth: 110,
-                    }}
-                    disabled
-                  >
-                    <option value="under99">Under $99</option>
-                    <option value="99-199">$99 - $199</option>
-                    <option value="199-299">$199 - $299</option>
-                  </select>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <FontAwesomeIcon icon={["fas", "fa-users"]} style={{ color: 'var(--blue)', fontSize: '1.1rem' }} />
-                  <select
-                    value={roomFilters.beds}
-                    onChange={() => { }}
-                    style={{
-                      border: '1px solid #e0e6ed',
-                      borderRadius: 8,
-                      padding: '0.4rem 1.1rem',
-                      fontSize: '1rem',
-                      background: '#f7fafd',
-                      color: '#222',
-                      outline: 'none',
-                      minWidth: 80,
-                    }}
-                    disabled
-                  >
-                    {roomFilterOptions.beds.map(opt => <option key={opt} value={opt}>{opt} bed{opt !== '1' ? 's' : ''}</option>)}
-                  </select>
-                </div>
-              </form>
+              <div className="room-filters" style={{ display: 'flex', gap: 16, margin: '0 0 24px 0', alignItems: 'center', justifyContent: 'center' }}>
+                <span style={{ fontSize: '1.2rem' }}><FontAwesomeIcon icon={["fas", "fa-bed"]} /></span>
+                <select value={selectedType} onChange={e => setSelectedType(e.target.value)}>
+                  <option value="All">All</option>
+                  {roomFilterOptions.type && roomFilterOptions.type.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                </select>
+                <span style={{ fontSize: '1.2rem' }}><FontAwesomeIcon icon={["fas", "fa-dollar-sign"]} /></span>
+                <select value={selectedPrice} onChange={e => setSelectedPrice(e.target.value)}>
+                  {priceOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+                </select>
+                <span style={{ fontSize: '1.2rem' }}><FontAwesomeIcon icon={["fas", "fa-users"]} /></span>
+                <select value={selectedBeds} onChange={e => setSelectedBeds(e.target.value)}>
+                  <option value="All">All</option>
+                  {roomFilterOptions.beds && roomFilterOptions.beds.map(opt => <option key={opt} value={opt}>{opt} bed</option>)}
+                </select>
+              </div>
               {/* Room grid */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem', alignItems: 'center', justifyContent: 'center', overflowX: 'auto', padding: '0 1rem' }}>
-                {rooms.map((r, idx) => (
-                  <div key={idx} style={{ background: '#fff', borderRadius: 12, boxShadow: '0 2px 12px rgba(0,0,0,0.08)', width: 240, height: 340, padding: 16, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    {r.image ? <img src={r.image} alt={r.name} style={{ width: '100%', height: 120, objectFit: 'cover', borderRadius: 8, marginBottom: 8 }} /> : <div style={{ width: '100%', height: 120, background: '#eee', borderRadius: 8, marginBottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#bbb' }}>No Image</div>}
-                    <div style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: 4 }}>{r.name}</div>
-                    <div style={{ fontSize: '0.98rem', color: '#444', marginBottom: 8 }}>{r.desc}</div>
-                    <div style={{ fontWeight: 600, color: 'var(--blue)', marginBottom: 8 }}>${r.price} <span style={{ fontWeight: 400, color: '#888' }}>/ night</span></div>
-                    <button className="editor-btn" style={{ width: '100%' }}>Book Now</button>
+                {filteredRooms.map((r, idx) => (
+                  <div key={r.id || idx} style={{ background: '#fff', borderRadius: 12, boxShadow: '0 2px 12px rgba(0,0,0,0.08)', width: 240, height: 340, padding: 16, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    {r.image ? <img src={r.image} alt={r.room_number} style={{ width: '100%', height: 120, objectFit: 'cover', borderRadius: 8, marginBottom: 8 }} /> : <div style={{ width: '100%', height: 120, background: '#eee', borderRadius: 8, marginBottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#bbb' }}>No Image</div>}
+                    <div style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: 4 }}>{r.room_number || '-'}</div>
+                    <div style={{ fontSize: '0.98rem', color: '#444', marginBottom: 8 }}>{r.room_type || '-'}</div>
+                    <div style={{ fontWeight: 600, color: 'var(--blue)', marginBottom: 8 }}>${r.price_per_night || r.price} <span style={{ fontWeight: 400, color: '#888' }}>/ night</span></div>
+                    <div style={{ fontSize: '0.98rem', color: '#555', marginBottom: 8 }}>Beds: {r.capacity || '-'}</div>
+                    <div style={{ fontSize: '0.98rem', color: r.is_available ? '#28a745' : '#c00', marginBottom: 8 }}>{r.is_available ? 'Available' : 'Not Available'}</div>
+                    <button
+                      className="btn book-now-btn"
+                      disabled={!r.is_available}
+                      onClick={() => handleBookNow(r)}
+                      style={!r.is_available ? { background: '#ccc', cursor: 'not-allowed' } : {}}
+                    >
+                      {r.is_available ? 'Book Now' : 'Not Available'}
+                    </button>
                   </div>
                 ))}
               </div>
@@ -377,6 +418,12 @@ export default function HotelWebsitePreview({
                   <div style={{ fontWeight: 700, fontSize: '1.3rem', marginBottom: 4 }}>{footerLogo || <FontAwesomeIcon icon={["fas", "fa-hotel"]} />}</div>
                   <div style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: 4 }}>{footerName}</div>
                   <div style={{ fontSize: '0.98rem', opacity: 0.8 }}>{footerSlogan}</div>
+                  {footerLocation && (
+                    <div style={{ fontSize: '0.98rem', opacity: 0.8, marginTop: 6, display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <FontAwesomeIcon icon={["fas", "fa-map-marker-alt"]} style={{ marginRight: 4 }} />
+                      <span>{footerLocation}</span>
+                    </div>
+                  )}
                 </div>
                 <div style={{ flex: 1, minWidth: 180 }}>
                   <div style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: 8 }}>Quick Links</div>
@@ -398,6 +445,14 @@ export default function HotelWebsitePreview({
           </div>
         </div>
       </div>
+      <ReservationModal
+        open={reservationModal.open}
+        onClose={() => setReservationModal({ open: false, room: null })}
+        onSubmit={handleReservationSubmit}
+        reservationForm={reservationForm}
+        setReservationForm={setReservationForm}
+        room={reservationModal.room}
+      />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import Navbar2 from '../../components/navbar2/navbar2.jsx';
 import template1 from '../../assets/images/template1.png'
 import './dashboard.css'
 import { getOwnerHotels, deleteHotel, createHotel, updateHotel, publishHotel } from '../../services/hotelApi';
+import { getReservations } from '../../services/reservationApi';
 import { useNavigate } from 'react-router-dom';
 import defaultImage from '../../assets/images/template1.png'; // Use your default image
 
@@ -21,6 +22,13 @@ function Dashboard() {
         { type: 'email', value: '' },
         { type: 'phone', value: '' }
     ]);
+    const [stats, setStats] = useState({
+        totalHotels: 0,
+        publishedHotels: 0,
+        totalRooms: 0,
+        availableRooms: 0,
+        totalRevenue: 0
+    });
     const navigate = useNavigate();
 
     const toggleSidebar = () => {
@@ -41,11 +49,39 @@ function Dashboard() {
 
     // Fetch hotels on component mount
     useEffect(() => {
-        async function fetchHotels() {
+        async function fetchHotelsAndReservations() {
             const response = await getOwnerHotels(userToken);
-            setHotels(response.results || []);
+            const hotelsData = response.results || [];
+            setHotels(hotelsData);
+
+            // Fetch reservations and calculate total revenue
+            let reservations = [];
+            try {
+                reservations = await getReservations(userToken);
+                reservations = Array.isArray(reservations) ? reservations : (reservations.results || []);
+            } catch (err) {
+                reservations = [];
+            }
+            const totalRevenue = reservations.reduce((sum, r) => sum + (parseFloat(r.price) || 0), 0);
+
+            // Calculate statistics
+            const totalHotels = hotelsData.length;
+            const publishedHotels = hotelsData.filter(hotel => hotel.status === 'published').length;
+            const totalRooms = hotelsData.reduce((sum, hotel) => sum + (hotel.rooms?.length || 0), 0);
+            const availableRooms = hotelsData.reduce((sum, hotel) => {
+                const availableRoomsInHotel = hotel.rooms?.filter(room => room.is_available)?.length || 0;
+                return sum + availableRoomsInHotel;
+            }, 0);
+
+            setStats({
+                totalHotels,
+                publishedHotels,
+                totalRooms,
+                availableRooms,
+                totalRevenue: Math.round(totalRevenue)
+            });
         }
-        fetchHotels();
+        fetchHotelsAndReservations();
     }, [userToken]);
 
     useEffect(() => {
@@ -153,24 +189,31 @@ function Dashboard() {
 
                     <ul className="box-info">
                         <li>
-                            <span className="icon"><FontAwesomeIcon icon={['fas', 'fa-calendar-check']} /></span>
+                            <span className="icon"><FontAwesomeIcon icon={['fas', 'fa-building']} /></span>
                             <span className="text">
-                                <h3>1020</h3>
-                                <p>New Orders</p>
+                                <h3>{stats.totalHotels}</h3>
+                                <p>Total Hotels</p>
                             </span>
                         </li>
                         <li>
-                            <span className="icon"><FontAwesomeIcon icon={['fas', 'fa-users']} /></span>
+                            <span className="icon"><FontAwesomeIcon icon={['fas', 'fa-bed']} /></span>
                             <span className="text">
-                                <h3>2834</h3>
-                                <p>Visitors</p>
+                                <h3>{stats.totalRooms}</h3>
+                                <p>Total Rooms</p>
+                            </span>
+                        </li>
+                        <li>
+                            <span className="icon"><FontAwesomeIcon icon={['fas', 'fa-check-circle']} /></span>
+                            <span className="text">
+                                <h3>{stats.availableRooms}</h3>
+                                <p>Available Rooms</p>
                             </span>
                         </li>
                         <li>
                             <span className="icon"><FontAwesomeIcon icon={['fas', 'fa-dollar-sign']} /></span>
                             <span className="text">
-                                <h3>$2543</h3>
-                                <p>Total Sales</p>
+                                <h3>${stats.totalRevenue}</h3>
+                                <p>Total Revenue</p>
                             </span>
                         </li>
                     </ul>
@@ -187,6 +230,7 @@ function Dashboard() {
                                 <thead>
                                     <tr>
                                         <th>Hotel</th>
+                                        <th>Rooms</th>
                                         <th>Last Modified</th>
                                         <th>Status</th>
                                         <th>Actions</th>
@@ -197,7 +241,17 @@ function Dashboard() {
                                         <tr key={hotel.id}>
                                             <td>
                                                 <img src={hotel.template_data?.socialThumb || defaultImage} alt="Hotel Thumbnail" style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '8px', marginRight: '8px' }} />
-                                                <p>{hotel.name}</p>
+                                                <p>{hotel.logo_text || hotel.name}</p>
+                                            </td>
+                                            <td>
+                                                <span style={{ fontSize: '0.9rem', color: '#666' }}>
+                                                    {hotel.rooms?.length || 0} rooms
+                                                    {hotel.rooms?.length > 0 && (
+                                                        <span style={{ color: '#28a745', marginLeft: '8px' }}>
+                                                            ({hotel.rooms.filter(room => room.is_available).length} available)
+                                                        </span>
+                                                    )}
+                                                </span>
                                             </td>
                                             <td>{hotel.updated_at ? new Date(hotel.updated_at).toLocaleString() : '-'}</td>
                                             <td>
@@ -215,30 +269,25 @@ function Dashboard() {
                         </div>
                         <div className="todo">
                             <div className="head">
-                                <h3>Todos</h3>
-                                <span><FontAwesomeIcon icon={['fas', 'fa-plus']} /></span>
-                                <span><FontAwesomeIcon icon={['fas', 'fa-filter']} /></span>
+                                <h3>Quick Stats</h3>
+                                <span><FontAwesomeIcon icon={['fas', 'fa-chart-bar']} /></span>
                             </div>
                             <ul className="todo-list">
                                 <li className="completed">
-                                    <p>Todo List</p>
-                                    <span><FontAwesomeIcon icon={['fas', 'fa-ellipsis-v']} /></span>
+                                    <p>Published Hotels: {stats.publishedHotels}</p>
+                                    <span><FontAwesomeIcon icon={['fas', 'fa-check']} /></span>
                                 </li>
                                 <li className="completed">
-                                    <p>Todo List</p>
-                                    <span><FontAwesomeIcon icon={['fas', 'fa-ellipsis-v']} /></span>
+                                    <p>Incomplete Hotels: {stats.totalHotels - stats.publishedHotels}</p>
+                                    <span><FontAwesomeIcon icon={['fas', 'fa-clock']} /></span>
                                 </li>
                                 <li className="not-completed">
-                                    <p>Todo List</p>
-                                    <span><FontAwesomeIcon icon={['fas', 'fa-ellipsis-v']} /></span>
+                                    <p>Occupancy Rate: {stats.totalRooms > 0 ? Math.round(((stats.totalRooms - stats.availableRooms) / stats.totalRooms) * 100) : 0}%</p>
+                                    <span><FontAwesomeIcon icon={['fas', 'fa-percentage']} /></span>
                                 </li>
                                 <li className="completed">
-                                    <p>Todo List</p>
-                                    <span><FontAwesomeIcon icon={['fas', 'fa-ellipsis-v']} /></span>
-                                </li>
-                                <li className="not-completed">
-                                    <p>Todo List</p>
-                                    <span><FontAwesomeIcon icon={['fas', 'fa-ellipsis-v']} /></span>
+                                    <p>Average Revenue per Hotel: ${stats.totalHotels > 0 ? Math.round(stats.totalRevenue / stats.totalHotels) : 0}</p>
+                                    <span><FontAwesomeIcon icon={['fas', 'fa-dollar-sign']} /></span>
                                 </li>
                             </ul>
                         </div>

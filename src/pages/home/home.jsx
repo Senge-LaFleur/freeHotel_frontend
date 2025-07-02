@@ -11,283 +11,171 @@ import profile3 from "../../assets/images/profile3.jpg"
 import profile4 from "../../assets/images/profile4.jpg"
 import profile5 from "../../assets/images/profile5.jpg"
 import profile6 from "../../assets/images/profile6.jpg"
+import { useEffect, useState } from 'react';
+import { getPublicHotels } from '../../services/hotelApi';
+import { useNavigate } from 'react-router-dom';
+import BookingForm from '../../components/bookingForm/bookingForm.jsx';
 
 import './home.css'
 
-function Home(){
-    
+function Home() {
+    const [hotels, setHotels] = useState([]);
+    const navigate = useNavigate();
 
-    return(
+    // Handle booking form submit
+    function handleBookingFormSubmit({ location, checkIn, checkOut, adults, children, rooms }) {
+        // Redirect to /rooms with location as query param
+        const params = new URLSearchParams();
+        if (location) params.append('location', location);
+        if (checkIn) params.append('checkIn', checkIn);
+        if (checkOut) params.append('checkOut', checkOut);
+        if (adults) params.append('adults', adults);
+        if (children) params.append('children', children);
+        if (rooms) params.append('rooms', rooms);
+        navigate(`/rooms?${params.toString()}`);
+    }
+
+    useEffect(() => {
+        async function fetchHotels() {
+            const res = await getPublicHotels();
+            setHotels(res.results ? res.results.filter(h => h.status === 'published') : []);
+        }
+        fetchHotels();
+    }, []);
+
+    return (
         <div>
-            <section class="popular-container">
-                <h2 class="section-header">Popular Hotel Deals Right Now</h2>
-                <div class="popular-grid">
-                    <div class="popular-card">
-                        <img src={outside1} alt="popular hotel" />
-                        <div class="popular-content">
-                            <div class="popular-card-header">
-                                <h4>The Plaza Hotel</h4>
-                                <div class="rating-location">
-                                    <p><b>8.5 - Excellent </b><br />(6216)</p>
-                                    <p>
-                                        <FontAwesomeIcon icon={['fas', 'fa-map-marker-alt']} />
-                                        Huwaii, USA
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="popular-deal">
-                                <div class="details">
-                                    <div class="details-head">
-                                        <p>Cheapest room</p>
-                                        <p>
-                                            <span><FontAwesomeIcon icon={['fas', 'fa-check']} /></span> 
-                                            Free cancellation
-                                        </p>
+            {/* Booking Form at the top */}
+            <div style={{ maxWidth: 1200, margin: '0 auto', padding: '2rem 0' }}>
+                <BookingForm onSubmit={handleBookingFormSubmit} />
+            </div>
+            <section className="popular-container">
+                <h2 className="section-header">Popular Hotel Deals Right Now</h2>
+                <div className="popular-grid">
+                    {hotels.map(hotel => {
+                        const t = hotel.template_data || {};
+                        const thumb = t.socialThumb || t.fields?.bgImage || outside1;
+                        const title = t.socialTitle || t.fields?.title || hotel.name;
+                        const location = t.footerLocation || hotel.location || 'Unknown';
+                        let minPrice = 'N/A';
+                        if (Array.isArray(t.rooms) && t.rooms.length > 0) {
+                            const prices = t.rooms.map(r => Number(r.price)).filter(p => !isNaN(p));
+                            if (prices.length > 0) minPrice = Math.min(...prices);
+                        }
+                        return (
+                            <div className="popular-card" key={hotel.id}>
+                                <img src={thumb} alt="popular hotel" />
+                                <div className="popular-content">
+                                    <div className="popular-card-header">
+                                        <h4>{title}</h4>
+                                        <div className="rating-location">
+                                            <p><b>8.5 - Excellent </b><br />(6216)</p>
+                                            <p>
+                                                <FontAwesomeIcon icon={['fas', 'fa-map-marker-alt']} />
+                                                {location}
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div class="price-date">
-                                        <p><span>$499</span><br/>per night</p>
-                                        <p><br />May 12 - May 18</p>
-                                    </div>
-                                </div>
-                                <button class="btn">Visit Website</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="popular-card">
-                        <img src={outside2} alt="popular hotel" />
-                        <div class="popular-content">
-                            <div class="popular-card-header">
-                                <h4>Real Madrid</h4>
-                                <div class="rating-location">
-                                    <p><b>8.5 - Excellent </b><br />(6216)</p>
-                                    <p>
-                                        <FontAwesomeIcon icon={['fas', 'fa-map-marker-alt']} />
-                                        Madrid, Spain
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="popular-deal">
-                                <div class="details">
-                                    <div class="details-head">
-                                        <p>Cheapest room</p>
-                                        <p>
-                                            <span><FontAwesomeIcon icon={['fas', 'fa-check']} /></span> 
-                                            Free cancellation
-                                        </p>
-                                    </div>
-                                    <div class="price-date">
-                                        <p><span>$549</span><br/>per night</p>
-                                        <p><br />May 12 - May 18</p>
+                                    <div className="popular-deal">
+                                        <div className="details">
+                                            <div className="details-head">
+                                                <p>Cheapest room</p>
+                                                <p>
+                                                    <span><FontAwesomeIcon icon={['fas', 'fa-check']} /></span>
+                                                    Free cancellation
+                                                </p>
+                                            </div>
+                                            <div className="price-date">
+                                                <p><span>{minPrice !== 'N/A' ? `$${minPrice}` : 'N/A'}</span><br />per night</p>
+                                                <p><br />First 8 days after payment</p>
+                                            </div>
+                                        </div>
+                                        <button className="btn" onClick={() => navigate(`/website/preview/${hotel.id}`)}>Visit Website</button>
                                     </div>
                                 </div>
-                                <button class="btn">Visit Website</button>
                             </div>
-                        </div>
-                    </div>
-                    <div class="popular-card">
-                        <img src={outside3} alt="popular hotel" />
-                        <div class="popular-content">
-                            <div class="popular-card-header">
-                                <h4>The Pennisula</h4>
-                                <div class="rating-location">
-                                    <p><b>8.5 - Excellent </b><br />(6216)</p>
-                                    <p>
-                                        <FontAwesomeIcon icon={['fas', 'fa-map-marker-alt']} />
-                                        Rome, Italy
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="popular-deal">
-                                <div class="details">
-                                    <div class="details-head">
-                                        <p>Cheapest room</p>
-                                        <p>
-                                            <span><FontAwesomeIcon icon={['fas', 'fa-check']} /></span> 
-                                            Free cancellation
-                                        </p>
-                                    </div>
-                                    <div class="price-date">
-                                        <p><span>$499</span><br/>per night</p>
-                                        <p><br />May 12 - May 18</p>
-                                    </div>
-                                </div>
-                                <button class="btn">Visit Website</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="popular-card">
-                        <img src={outside4} alt="popular hotel" />
-                        <div class="popular-content">
-                            <div class="popular-card-header">
-                                <h4>Habibi The Palm</h4>
-                                <div class="rating-location">
-                                    <p><b>8.5 - Excellent </b><br />(6216)</p>
-                                    <p>
-                                        <FontAwesomeIcon icon={['fas', 'fa-map-marker-alt']} />
-                                        Dubai, UAE
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="popular-deal">
-                                <div class="details">
-                                    <div class="details-head">
-                                        <p>Cheapest room</p>
-                                        <p>
-                                            <span><FontAwesomeIcon icon={['fas', 'fa-check']} /></span> 
-                                            Free cancellation
-                                        </p>
-                                    </div>
-                                    <div class="price-date">
-                                        <p><span>$499</span><br/>per night</p>
-                                        <p><br />May 12 - May 18</p>
-                                    </div>
-                                </div>
-                                <button class="btn">Visit Website</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="popular-card">
-                        <img src={outside5} alt="popular hotel" />
-                        <div class="popular-content">
-                            <div class="popular-card-header">
-                                <h4>The Ritz-Carlton</h4>
-                                <div class="rating-location">
-                                    <p><b>8.5 - Excellent </b><br />(6216)</p>
-                                    <p>
-                                        <FontAwesomeIcon icon={['fas', 'fa-map-marker-alt']} />
-                                        Tokyo, Japan
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="popular-deal">
-                                <div class="details">
-                                    <div class="details-head">
-                                        <p>Cheapest room</p>
-                                        <p>
-                                            <span><FontAwesomeIcon icon={['fas', 'fa-check']} /></span> 
-                                            Free cancellation
-                                        </p>
-                                    </div>
-                                    <div class="price-date">
-                                        <p><span>$499</span><br/>per night</p>
-                                        <p><br />May 12 - May 18</p>
-                                    </div>
-                                </div>
-                                <button class="btn">Visit Website</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="popular-card">
-                        <img src={outside8} alt="popular hotel" />
-                        <div class="popular-content">
-                            <div class="popular-card-header">
-                                <h4>Marina Bay Sands</h4>
-                                <div class="rating-location">
-                                    <p><b>8.5 - Excellent </b><br />(6216)</p>
-                                    <p>
-                                        <FontAwesomeIcon icon={['fas', 'fa-map-marker-alt']} />
-                                        Singapore
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="popular-deal">
-                                <div class="details">
-                                    <div class="details-head">
-                                        <p>Cheapest room</p>
-                                        <p>
-                                            <span><FontAwesomeIcon icon={['fas', 'fa-check']} /></span> 
-                                            Free cancellation
-                                        </p>
-                                    </div>
-                                    <div class="price-date">
-                                        <p><span>$499</span><br/>per night</p>
-                                        <p><br />May 12 - May 18</p>
-                                    </div>
-                                </div>
-                                <button class="btn">Visit Website</button>
-                            </div>
-                        </div>
-                    </div>
+                        );
+                    })}
                 </div>
             </section>
 
-            <section class="client">
-                <div class="section-container client-container">
-                    <h2 class="section-header">What our Clients Say</h2>
-                    <div class="client-grid">
-                        <div class="client-card">
+            <section className="client">
+                <div className="section-container client-container">
+                    <h2 className="section-header">What our Clients Say</h2>
+                    <div className="client-grid">
+                        <div className="client-card">
                             <img src={profile1} alt="review-profile" />
-                            <div class="star">
-                                <FontAwesomeIcon icon={['fas','fa-star']} />
-                                <FontAwesomeIcon icon={['fas','fa-star']} />
-                                <FontAwesomeIcon icon={['fas','fa-star']} />
-                                <FontAwesomeIcon icon={['fas','fa-star']} />
-                                <FontAwesomeIcon icon={['fas','fa-star-half-alt']} id="half-star" />
+                            <div className="star">
+                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
+                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
+                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
+                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
+                                <FontAwesomeIcon icon={['fas', 'fa-star-half-alt']} id="half-star" />
                             </div>
                             <p>The booking process was seamless, and the confirmation was instant.
                                 I highly recommend FreeHotel for hassle-free hotel bookings.
                             </p>
                         </div>
-                        <div class="client-card">
+                        <div className="client-card">
                             <img src={profile2} alt="review-profile" />
-                            <div class="star">
-                                <FontAwesomeIcon icon={['fas','fa-star']} />
-                                <FontAwesomeIcon icon={['fas','fa-star']} />
-                                <FontAwesomeIcon icon={['fas','fa-star']} />
-                                <FontAwesomeIcon icon={['fas','fa-star']} />
-                                <FontAwesomeIcon icon={['fas','fa-star-half-alt']} id="half-star" />
+                            <div className="star">
+                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
+                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
+                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
+                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
+                                <FontAwesomeIcon icon={['fas', 'fa-star-half-alt']} id="half-star" />
                             </div>
                             <p>The booking process was seamless, and the confirmation was instant.
                                 I highly recommend FreeHotel for hassle-free hotel bookings.
                             </p>
                         </div>
-                        <div class="client-card">
+                        <div className="client-card">
                             <img src={profile3} alt="review-profile" />
-                            <div class="star">
-                                <FontAwesomeIcon icon={['fas','fa-star']} />
-                                <FontAwesomeIcon icon={['fas','fa-star']} />
-                                <FontAwesomeIcon icon={['fas','fa-star']} />
-                                <FontAwesomeIcon icon={['fas','fa-star']} />
-                                <FontAwesomeIcon icon={['fas','fa-star-half-alt']} id="half-star" />
+                            <div className="star">
+                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
+                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
+                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
+                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
+                                <FontAwesomeIcon icon={['fas', 'fa-star-half-alt']} id="half-star" />
                             </div>
                             <p>The booking process was seamless, and the confirmation was instant.
                                 I highly recommend FreeHotel for hassle-free hotel bookings.
                             </p>
                         </div>
-                        <div class="client-card">
+                        <div className="client-card">
                             <img src={profile4} alt="review-profile" />
-                            <div class="star">
-                                <FontAwesomeIcon icon={['fas','fa-star']} />
-                                <FontAwesomeIcon icon={['fas','fa-star']} />
-                                <FontAwesomeIcon icon={['fas','fa-star']} />
-                                <FontAwesomeIcon icon={['fas','fa-star']} />
-                                <FontAwesomeIcon icon={['fas','fa-star-half-alt']} id="half-star" />
+                            <div className="star">
+                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
+                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
+                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
+                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
+                                <FontAwesomeIcon icon={['fas', 'fa-star-half-alt']} id="half-star" />
                             </div>
                             <p>The booking process was seamless, and the confirmation was instant.
                                 I highly recommend FreeHotel for hassle-free hotel bookings.
                             </p>
                         </div>
-                        <div class="client-card">
+                        <div className="client-card">
                             <img src={profile5} alt="review-profile" />
-                            <div class="star">
-                                <FontAwesomeIcon icon={['fas','fa-star']} />
-                                <FontAwesomeIcon icon={['fas','fa-star']} />
-                                <FontAwesomeIcon icon={['fas','fa-star']} />
-                                <FontAwesomeIcon icon={['fas','fa-star']} />
-                                <FontAwesomeIcon icon={['fas','fa-star-half-alt']} id="half-star" />
+                            <div className="star">
+                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
+                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
+                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
+                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
+                                <FontAwesomeIcon icon={['fas', 'fa-star-half-alt']} id="half-star" />
                             </div>
                             <p>The booking process was seamless, and the confirmation was instant.
                                 I highly recommend FreeHotel for hassle-free hotel bookings.
                             </p>
                         </div>
-                        <div class="client-card">
+                        <div className="client-card">
                             <img src={profile6} alt="review-profile" />
-                            <div class="star">
-                                <FontAwesomeIcon icon={['fas','fa-star']} />
-                                <FontAwesomeIcon icon={['fas','fa-star']} />
-                                <FontAwesomeIcon icon={['fas','fa-star']} />
-                                <FontAwesomeIcon icon={['fas','fa-star']} />
-                                <FontAwesomeIcon icon={['fas','fa-star-half-alt']} id="half-star" />
+                            <div className="star">
+                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
+                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
+                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
+                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
+                                <FontAwesomeIcon icon={['fas', 'fa-star-half-alt']} id="half-star" />
                             </div>
                             <p>The booking process was seamless, and the confirmation was instant.
                                 I highly recommend FreeHotel for hassle-free hotel bookings.
@@ -296,9 +184,6 @@ function Home(){
                     </div>
                 </div>
             </section>
-
-            
-            
         </div>
     )
 }

@@ -5,8 +5,12 @@ import editor2 from '../../assets/images/editor2.png';
 import editor3 from '../../assets/images/editor3.jpg';
 import './templateEditor.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { createHotel, updateHotel, publishHotel } from '../../services/hotelApi';
+import { createHotel, updateHotel, publishHotel, createRoom, updateRoom, deleteRoom, getRooms } from '../../services/hotelApi';
 import HotelWebsitePreview from '../../components/hotelWebsitePreview';
+
+const cameroonTowns = [
+    'Abong-Mbang', 'Akonolinga', 'Bagante', 'Bafia', 'Bafang', 'Bafoussam', 'Bamenda', 'Bandjoun', 'Batouri', 'Banyo', 'Bertoua', 'Buea', 'Djoum', 'Dibombari', 'Douala', 'Dschang', 'Ebolowa', 'Ekondo Titi', 'Figuil', 'Foumban', 'Fundong', 'Garoua', 'Guider', 'Kaele', 'Kribi', 'Kumba', 'Kumbo', 'Kousseri', 'Limbe', 'Maan', 'Mamfe', 'Manjo', 'Maroua', 'Mbanga', 'Mbengwi', 'Mbouda', 'Meiganga', 'Mokolo', 'Moloundou', 'Monatele', 'Mora', 'Ndop', 'Ngaoundere', 'Nkongsamba', 'Obala', 'Pitoa', 'Poli', 'Sangmelima', 'Tignere', 'Tibati', 'Tiko', 'Wum', 'Yaounde', 'Yagoua', 'Yokadouma', 'Other'
+];
 
 const templates = {
     'luxury-hotel': {
@@ -114,7 +118,18 @@ export default function TemplateEditor() {
         { image: null, name: 'Deluxe Room', desc: 'Spacious room with a view.', price: 159 },
     ]);
     const [editingRoom, setEditingRoom] = useState(null);
-    const [newRoom, setNewRoom] = useState({ image: null, name: '', desc: '', price: '' });
+    const [newRoom, setNewRoom] = useState({
+        room_number: '',
+        name: '',
+        desc: '',
+        price: '',
+        room_type: '',
+        capacity: 1,
+        is_available: true,
+        beds: '',
+        image: '',
+        imageFile: null,
+    });
     const [roomsBgColor, setRoomsBgColor] = useState('#fff');
     const [roomsPadding, setRoomsPadding] = useState(32);
     const [footerLogo, setFooterLogo] = useState('');
@@ -141,6 +156,12 @@ export default function TemplateEditor() {
     const [socialTitle, setSocialTitle] = useState('');
     const [socialDesc, setSocialDesc] = useState('');
     const [cookieEnabled, setCookieEnabled] = useState(true);
+    const [footerLocation, setFooterLocation] = useState('');
+    const [footerCountry, setFooterCountry] = useState('Cameroon');
+    const [footerTown, setFooterTown] = useState('');
+    const [footerCustomCountry, setFooterCustomCountry] = useState('');
+    const [footerCustomTown, setFooterCustomTown] = useState('');
+    const [addingRoom, setAddingRoom] = useState(false);
 
     const aboutSectionRef = useRef(null);
     const amenitiesSectionRef = useRef(null);
@@ -160,15 +181,67 @@ export default function TemplateEditor() {
                     });
                     if (res.ok) {
                         const hotel = await res.json();
-                        setFields(hotel.template_data?.fields || template.default);
+                        const t = hotel.template_data || {};
+                        setFields(t.fields || template.default);
+                        setBgType(t.bgType || 'color');
+                        setBgImage(t.bgImage || (template ? template.image : ''));
+                        setBgBrightness(t.bgBrightness || 1);
+                        setButtonHoverBg(t.buttonHoverBg || '#ffe066');
+                        setButtonHoverText(t.buttonHoverText || '#0b3e66');
+                        setGeneralPadding(t.generalPadding || 32);
+                        setNavbarPadding(t.navbarPadding || 24);
+                        setHeroPadding(t.heroPadding || 32);
+                        setAboutTitle(t.aboutTitle || 'THE PERFECT GETAWAY');
+                        setAboutParagraph(t.aboutParagraph || 'Create Lasting Memories with Your Loved Ones, Your Family Paradise Found.');
+                        setAboutImage(t.aboutImage || null);
+                        setAboutBgColor(t.aboutBgColor || '#e9f0f7');
+                        setAboutPadding(t.aboutPadding || 32);
+                        setAboutLayout(t.aboutLayout || 'left');
+                        setAmenities(t.amenities || []);
+                        setAmenitiesBgColor(t.amenitiesBgColor || '#e9f0f7');
+                        setAmenitiesPadding(t.amenitiesPadding || 32);
+                        setRoomFilters(t.roomFilters || { type: 'Standard', price: 'under99', beds: '1' });
+                        setRoomFilterOptions(t.roomFilterOptions || { type: ['Standard', 'Deluxe', 'VIP'], price: ['under99', '99-199', '199-299'], beds: ['1', '2'] });
+                        setRooms(t.rooms || []);
+                        setRoomsBgColor(t.roomsBgColor || '#fff');
+                        setRoomsPadding(t.roomsPadding || 32);
+                        setFooterLogo(t.footerLogo || '');
                         setFooterName(hotel.logo_text || hotel.name);
-                        setFooterContacts([
+                        setFooterSlogan(t.footerSlogan || '');
+                        setFooterLinks(t.footerLinks || ['Home', 'About', 'Contact']);
+                        setFooterContacts(t.footerContacts || [
                             { type: 'email', value: hotel.footer_email || hotel.email },
                             { type: 'phone', value: hotel.footer_phone || hotel.phone_number }
                         ]);
-                        setFooterSlogan(hotel.slogan || '');
+                        setFooterSocials(t.footerSocials || []);
+                        setFooterBgColor(t.footerBgColor || '#222');
+                        setFooterPadding(t.footerPadding || 32);
+                        setFavicon(t.favicon || '');
                         setDomain(hotel.domain_name || '');
-                        // ...prefill other fields as needed
+                        setSocialThumb(t.socialThumb || '');
+                        setSocialTitle(t.socialTitle || '');
+                        setSocialDesc(t.socialDesc || '');
+                        setCookieEnabled(t.cookieEnabled !== undefined ? t.cookieEnabled : true);
+                        let country = 'Cameroon', town = '', customCountry = '', customTown = '';
+                        if (t.footerLocation) {
+                            const parts = t.footerLocation.split(',').map(s => s.trim());
+                            if (parts.length === 2) {
+                                if (parts[1] === 'Cameroon') {
+                                    country = 'Cameroon';
+                                    if (cameroonTowns.includes(parts[0])) town = parts[0];
+                                    else { town = 'Other'; customTown = parts[0]; }
+                                } else {
+                                    country = 'Other';
+                                    customCountry = parts[1];
+                                    customTown = parts[0];
+                                }
+                            }
+                        }
+                        setFooterCountry(country);
+                        setFooterTown(town);
+                        setFooterCustomCountry(customCountry);
+                        setFooterCustomTown(customTown);
+                        setFooterLocation(t.footerLocation || hotel.location || '');
                     }
                 } catch (err) {
                     alert('Error loading hotel data');
@@ -186,6 +259,21 @@ export default function TemplateEditor() {
         }
         fetchHotel();
     }, [hotelId, template]);
+
+    // Helper to fetch rooms from backend
+    const fetchRoomsFromBackend = async () => {
+        if (hotelId && userToken) {
+            const backendRooms = await getRooms(hotelId, userToken);
+            const newRooms = Array.isArray(backendRooms) ? backendRooms : (backendRooms.results || []);
+            setRooms(newRooms);
+            console.log('Rooms after fetch:', newRooms); // Debug: log rooms after fetching
+        }
+    };
+
+    useEffect(() => {
+        fetchRoomsFromBackend();
+        // eslint-disable-next-line
+    }, [hotelId, userToken]);
 
     if (!template) return null;
 
@@ -243,12 +331,11 @@ export default function TemplateEditor() {
     const handleRoomImageChange = (e, idx, isNew) => {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                if (isNew) setNewRoom(r => ({ ...r, image: ev.target.result }));
-                else setRooms(rs => rs.map((r, i) => i === idx ? { ...r, image: ev.target.result } : r));
-            };
-            reader.readAsDataURL(file);
+            if (isNew) {
+                setNewRoom(r => ({ ...r, image: URL.createObjectURL(file), imageFile: file }));
+            } else {
+                setRooms(rs => rs.map((room, i) => i === idx ? { ...room, image: URL.createObjectURL(file), imageFile: file } : room));
+            }
         }
     };
 
@@ -256,13 +343,77 @@ export default function TemplateEditor() {
         setRooms(rs => rs.map((r, i) => i === idx ? { ...r, [field]: value } : r));
     };
 
-    const handleAddRoom = () => {
-        setRooms(rs => [...rs, { ...newRoom, price: Number(newRoom.price) }]);
-        setNewRoom({ image: null, name: '', desc: '', price: '' });
+    const handleRoomFieldChange = (field, value) => {
+        setNewRoom(r => ({ ...r, [field]: value }));
     };
 
-    const handleRemoveRoom = (idx) => {
-        setRooms(rs => rs.filter((_, i) => i !== idx));
+    const handleAddRoom = async () => {
+        if (!hotelId || !userToken) return;
+        if (!newRoom.room_number) {
+            alert('Room number is required');
+            return;
+        }
+        setAddingRoom(true);
+        const formData = new FormData();
+        formData.append('room_number', newRoom.room_number);
+        formData.append('room_type', newRoom.room_type || newRoom.type || '');
+        formData.append('price_per_night', newRoom.price);
+        formData.append('capacity', newRoom.capacity);
+        formData.append('is_available', newRoom.is_available);
+        if (newRoom.imageFile) formData.append('image', newRoom.imageFile);
+        try {
+            const created = await createRoom(hotelId, formData, userToken);
+            if (created && created.id) {
+                await fetchRoomsFromBackend();
+                setNewRoom({ room_number: '', name: '', desc: '', price: '', room_type: '', capacity: 1, is_available: true, beds: '', image: '', imageFile: null });
+            } else {
+                console.error('Room creation failed:', created);
+                alert('Failed to create room: ' + (created && created.detail ? created.detail : JSON.stringify(created)));
+            }
+        } catch (err) {
+            console.error('Room creation error:', err);
+            alert('Error creating room: ' + (err && err.message ? err.message : err));
+        } finally {
+            setAddingRoom(false);
+        }
+    };
+
+    const handleEditRoom = async (idx) => {
+        if (!hotelId || !userToken) return;
+        const room = rooms[idx];
+        if (!room.id) return;
+        const formData = new FormData();
+        formData.append('room_number', room.room_number);
+        formData.append('room_type', room.room_type || room.type || '');
+        formData.append('price_per_night', room.price_per_night || room.price);
+        formData.append('capacity', room.capacity);
+        formData.append('is_available', room.is_available);
+        if (room.imageFile) formData.append('image', room.imageFile);
+        try {
+            const updated = await updateRoom(hotelId, room.id, formData, userToken);
+            if (updated && updated.id) {
+                await fetchRoomsFromBackend();
+            } else {
+                console.error('Room update failed:', updated);
+                alert('Failed to update room: ' + (updated && updated.detail ? updated.detail : JSON.stringify(updated)));
+            }
+        } catch (err) {
+            console.error('Room update error:', err);
+            alert('Error updating room: ' + (err && err.message ? err.message : err));
+        }
+    };
+
+    const handleRemoveRoom = async (idx) => {
+        if (!hotelId || !userToken) return;
+        const room = rooms[idx];
+        if (!room.id) return;
+        try {
+            await deleteRoom(hotelId, room.id, userToken);
+            await fetchRoomsFromBackend();
+        } catch (err) {
+            console.error('Room delete error:', err);
+            alert('Error deleting room: ' + (err && err.message ? err.message : err));
+        }
     };
 
     // Handlers for finishing touches
@@ -283,6 +434,11 @@ export default function TemplateEditor() {
         }
     };
 
+    // Helper to check if finishing touches are complete
+    function isFinishingTouchesComplete() {
+        return domain && socialThumb && socialTitle && socialDesc && favicon;
+    }
+
     // Save Progress Handler
     const handleSaveProgress = async () => {
         const hotelData = {
@@ -294,10 +450,42 @@ export default function TemplateEditor() {
             domain_name: domain,
             template_data: {
                 fields,
+                bgType,
+                bgImage,
+                bgBrightness,
+                buttonHoverBg,
+                buttonHoverText,
+                generalPadding,
+                navbarPadding,
+                heroPadding,
+                aboutTitle,
+                aboutParagraph,
+                aboutImage,
+                aboutBgColor,
+                aboutPadding,
+                aboutLayout,
                 amenities,
+                amenitiesBgColor,
+                amenitiesPadding,
+                roomFilters,
+                roomFilterOptions,
                 rooms,
+                roomsBgColor,
+                roomsPadding,
+                footerLogo,
+                footerName,
+                footerSlogan,
+                footerLinks,
+                footerContacts,
+                footerSocials,
+                footerBgColor,
+                footerPadding,
+                favicon,
                 socialThumb,
-                // ...add other sidebar state as needed
+                socialTitle,
+                socialDesc,
+                cookieEnabled,
+                footerLocation: getFooterLocation(),
             },
             status: 'incomplete',
         };
@@ -316,22 +504,13 @@ export default function TemplateEditor() {
 
     // Publish Handler
     const handlePublish = async () => {
-        // Check if finishing touches are done
-        if (!domain /* or other finishing touches checks */) {
-            // Redirect to finishing touches section
+        if (!isFinishingTouchesComplete()) {
             setExpandedSections(prev => ({ ...prev, finishing: true }));
             alert('Please complete the finishing touches before publishing.');
             return;
         }
-        // Redirect to plan page (simulate plan selection for now)
-        // In real app, you would navigate to /plan and handle plan selection
-        // For now, just publish as free plan
         try {
-            if (!hotelId) {
-                alert('Please save your hotel first!');
-                return;
-            }
-            // Update hotel with latest data including socialThumb before publishing
+            // Always save progress before publishing
             const hotelData = {
                 name: footerName,
                 logo_text: footerName,
@@ -341,19 +520,64 @@ export default function TemplateEditor() {
                 domain_name: domain,
                 template_data: {
                     fields,
+                    bgType,
+                    bgImage,
+                    bgBrightness,
+                    buttonHoverBg,
+                    buttonHoverText,
+                    generalPadding,
+                    navbarPadding,
+                    heroPadding,
+                    aboutTitle,
+                    aboutParagraph,
+                    aboutImage,
+                    aboutBgColor,
+                    aboutPadding,
+                    aboutLayout,
                     amenities,
+                    amenitiesBgColor,
+                    amenitiesPadding,
+                    roomFilters,
+                    roomFilterOptions,
                     rooms,
+                    roomsBgColor,
+                    roomsPadding,
+                    footerLogo,
+                    footerName,
+                    footerSlogan,
+                    footerLinks,
+                    footerContacts,
+                    footerSocials,
+                    footerBgColor,
+                    footerPadding,
+                    favicon,
                     socialThumb,
-                    // ...add other sidebar state as needed
+                    socialTitle,
+                    socialDesc,
+                    cookieEnabled,
+                    footerLocation: getFooterLocation(),
                 },
                 status: 'published',
             };
-            await updateHotel(hotelId, hotelData, userToken);
+            if (hotelId) {
+                await updateHotel(hotelId, hotelData, userToken);
+            } else {
+                await createHotel(hotelData, userToken);
+            }
             await publishHotel(hotelId, userToken);
             alert('Hotel published!');
             navigate('/dashboard');
         } catch (err) {
             alert('Error publishing hotel');
+        }
+    };
+
+    const getFooterLocation = () => {
+        if (footerCountry === 'Cameroon') {
+            if (footerTown === 'Other') return `${footerCustomTown}, Cameroon`;
+            return `${footerTown}, Cameroon`;
+        } else {
+            return `${footerCustomTown}, ${footerCustomCountry}`;
         }
     };
 
@@ -713,9 +937,9 @@ export default function TemplateEditor() {
                                                         minWidth: 110,
                                                     }}
                                                 >
-                                                    <option value="under99">Under $99</option>
-                                                    <option value="99-199">$99 - $199</option>
-                                                    <option value="199-299">$199 - $299</option>
+                                                    {roomFilterOptions.price && roomFilterOptions.price.map(opt => (
+                                                        <option key={opt} value={opt}>{opt}</option>
+                                                    ))}
                                                 </select>
                                             </div>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -748,24 +972,37 @@ export default function TemplateEditor() {
                                         </div>
                                     </div>
                                     <div className="editor-section">
-                                        <label>Rooms</label>
+                                        <label style={{ fontWeight: 600, fontSize: '1.1rem', marginBottom: 8 }}>Rooms</label>
                                         {rooms.map((r, idx) => (
-                                            <div key={idx} style={{ border: '1px solid #eee', borderRadius: 8, marginBottom: 8, padding: 8, display: 'flex', gap: 8, alignItems: 'center' }}>
+                                            <div key={r.id || idx} className="room-row" style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, background: '#f7fafd', borderRadius: 8, padding: 10, boxShadow: '0 1px 4px #e0e6ed' }}>
                                                 <input type="file" accept="image/*" onChange={e => handleRoomImageChange(e, idx, false)} style={{ width: 60 }} />
-                                                {r.image && <img src={r.image} alt="Room" style={{ width: 60, height: 40, objectFit: 'cover', borderRadius: 6 }} />}
-                                                <input value={r.name} onChange={e => handleRoomChange(idx, 'name', e.target.value)} placeholder="Name" style={{ width: 100 }} />
-                                                <input value={r.desc} onChange={e => handleRoomChange(idx, 'desc', e.target.value)} placeholder="Description" style={{ width: 120 }} />
-                                                <input type="number" value={r.price} onChange={e => handleRoomChange(idx, 'price', e.target.value)} placeholder="Price" style={{ width: 60 }} />
+                                                {r.image && <img src={typeof r.image === 'string' && r.image.startsWith('blob:') ? r.image : r.image.startsWith('http') ? r.image : `/media/${r.image}`} alt="Room" style={{ width: 60, height: 40, objectFit: 'cover', borderRadius: 6 }} />}
+                                                <input value={r.room_number} onChange={e => setRooms(rs => rs.map((room, i) => i === idx ? { ...room, room_number: e.target.value } : room))} placeholder="Room Number" style={{ width: 90, borderRadius: 6, border: '1px solid #d1d5db', padding: 6 }} />
+                                                <input value={r.room_type || ''} onChange={e => setRooms(rs => rs.map((room, i) => i === idx ? { ...room, room_type: e.target.value } : room))} placeholder="Type" style={{ width: 100, borderRadius: 6, border: '1px solid #d1d5db', padding: 6 }} />
+                                                <input type="number" value={r.price_per_night || r.price || ''} onChange={e => setRooms(rs => rs.map((room, i) => i === idx ? { ...room, price_per_night: e.target.value } : room))} placeholder="Price" style={{ width: 70, borderRadius: 6, border: '1px solid #d1d5db', padding: 6 }} />
+                                                <input type="number" value={r.capacity || 1} onChange={e => setRooms(rs => rs.map((room, i) => i === idx ? { ...room, capacity: e.target.value } : room))} placeholder="Beds" style={{ width: 60, borderRadius: 6, border: '1px solid #d1d5db', padding: 6 }} />
+                                                <select value={r.is_available ? 'Available' : 'Not Available'} onChange={e => setRooms(rs => rs.map((room, i) => i === idx ? { ...room, is_available: e.target.value === 'Available' } : room))} style={{ borderRadius: 6, border: '1px solid #d1d5db', padding: 6 }}>
+                                                    <option value="Available">Available</option>
+                                                    <option value="Not Available">Not Available</option>
+                                                </select>
+                                                <button onClick={() => handleEditRoom(idx)} style={{ marginLeft: 8, background: '#0b3e66', color: '#fff', border: 'none', borderRadius: 6, padding: '6px 14px', fontWeight: 500, cursor: 'pointer' }}>Save</button>
                                                 <button onClick={() => handleRemoveRoom(idx)} style={{ background: 'none', border: 'none', color: '#c00', fontSize: '1.2rem', cursor: 'pointer' }} title="Remove"><FontAwesomeIcon icon={["fas", "fa-trash"]} /></button>
                                             </div>
                                         ))}
-                                        <div style={{ border: '1px solid #eee', borderRadius: 8, marginBottom: 8, padding: 8, display: 'flex', gap: 8, alignItems: 'center' }}>
+                                        <div className="new-room-row" style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10, background: '#e9f0f7', borderRadius: 8, padding: 10 }}>
                                             <input type="file" accept="image/*" onChange={e => handleRoomImageChange(e, null, true)} style={{ width: 60 }} />
                                             {newRoom.image && <img src={newRoom.image} alt="Room" style={{ width: 60, height: 40, objectFit: 'cover', borderRadius: 6 }} />}
-                                            <input value={newRoom.name} onChange={e => setNewRoom(r => ({ ...r, name: e.target.value }))} placeholder="Name" style={{ width: 100 }} />
-                                            <input value={newRoom.desc} onChange={e => setNewRoom(r => ({ ...r, desc: e.target.value }))} placeholder="Description" style={{ width: 120 }} />
-                                            <input type="number" value={newRoom.price} onChange={e => setNewRoom(r => ({ ...r, price: e.target.value }))} placeholder="Price" style={{ width: 60 }} />
-                                            <button onClick={handleAddRoom} style={{ background: 'var(--light-blue)', border: 'none', color: '#fff', fontSize: '1.2rem', padding: '0.4rem 0.7rem', borderRadius: '6px', cursor: 'pointer' }} title="Add"><FontAwesomeIcon icon={["fas", "fa-plus"]} /></button>
+                                            <input value={newRoom.room_number} onChange={e => handleRoomFieldChange('room_number', e.target.value)} placeholder="Room Number" style={{ width: 90, borderRadius: 6, border: '1px solid #d1d5db', padding: 6 }} />
+                                            <input value={newRoom.room_type} onChange={e => handleRoomFieldChange('room_type', e.target.value)} placeholder="Type" style={{ width: 100, borderRadius: 6, border: '1px solid #d1d5db', padding: 6 }} />
+                                            <input type="number" value={newRoom.price} onChange={e => handleRoomFieldChange('price', e.target.value)} placeholder="Price" style={{ width: 70, borderRadius: 6, border: '1px solid #d1d5db', padding: 6 }} />
+                                            <input type="number" value={newRoom.capacity} onChange={e => handleRoomFieldChange('capacity', e.target.value)} placeholder="Beds" style={{ width: 60, borderRadius: 6, border: '1px solid #d1d5db', padding: 6 }} />
+                                            <select value={newRoom.is_available ? 'Available' : 'Not Available'} onChange={e => handleRoomFieldChange('is_available', e.target.value === 'Available')} style={{ borderRadius: 6, border: '1px solid #d1d5db', padding: 6 }}>
+                                                <option value="Available">Available</option>
+                                                <option value="Not Available">Not Available</option>
+                                            </select>
+                                            <button onClick={handleAddRoom} disabled={addingRoom} style={{ background: '#0b3e66', border: 'none', color: '#fff', fontSize: '1.2rem', padding: '6px 14px', borderRadius: '6px', cursor: addingRoom ? 'not-allowed' : 'pointer', fontWeight: 500 }} title="Add">
+                                                {addingRoom ? 'Saving...' : <><FontAwesomeIcon icon={["fas", "fa-plus"]} /> Add</>}
+                                            </button>
                                         </div>
                                     </div>
                                     <div className="editor-section">
@@ -795,9 +1032,37 @@ export default function TemplateEditor() {
                             {expandedSections.footer && (
                                 <div className="sidebar-section-content">
                                     <div className="editor-section">
-                                        <label>Logo/Name/Slogan</label>
+                                        <label>LOGO TEXT (Hotel Name in Dashboard)</label>
+                                        <input value={footerName} onChange={e => setFooterName(e.target.value)} placeholder="LOGO TEXT (Hotel Name)" />
+                                        <label>Location</label>
+                                        <select
+                                            className="styled-select"
+                                            value={footerCountry}
+                                            onChange={e => setFooterCountry(e.target.value)}
+                                        >
+                                            <option value="Cameroon">Cameroon</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                        {footerCountry === 'Other' && (
+                                            <input value={footerCustomCountry} onChange={e => setFooterCustomCountry(e.target.value)} placeholder="Enter country name" />
+                                        )}
+                                        {footerCountry === 'Cameroon' && (
+                                            <select
+                                                className="styled-select"
+                                                value={footerTown}
+                                                onChange={e => setFooterTown(e.target.value)}
+                                            >
+                                                <option value="">Select Town</option>
+                                                {cameroonTowns.map(town => <option key={town} value={town}>{town}</option>)}
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        )}
+                                        {((footerCountry === 'Cameroon' && footerTown === 'Other') || footerCountry === 'Other') && (
+                                            <input value={footerCustomTown} onChange={e => setFooterCustomTown(e.target.value)} placeholder="Enter town name" />
+                                        )}
+                                        <label>Logo (text or image url)</label>
                                         <input value={footerLogo} onChange={e => setFooterLogo(e.target.value)} placeholder="Logo (text or image url)" />
-                                        <input value={footerName} onChange={e => setFooterName(e.target.value)} placeholder="Name" />
+                                        <label>Slogan</label>
                                         <input value={footerSlogan} onChange={e => setFooterSlogan(e.target.value)} placeholder="Slogan" />
                                     </div>
                                     <div className="editor-section">
@@ -955,6 +1220,7 @@ export default function TemplateEditor() {
                     </div>
 
                     <HotelWebsitePreview
+                        key={rooms.map(r => r.id).join('-')}
                         fields={fields}
                         bgType={bgType}
                         bgImage={bgImage}
@@ -979,6 +1245,7 @@ export default function TemplateEditor() {
                         roomsPadding={roomsPadding}
                         footerLogo={footerLogo}
                         footerName={footerName}
+                        footerLocation={footerLocation}
                         footerSlogan={footerSlogan}
                         footerLinks={footerLinks}
                         footerContacts={footerContacts}
