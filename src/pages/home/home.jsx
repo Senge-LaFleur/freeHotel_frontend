@@ -1,10 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import outside1 from "../../assets/images/outside1.jpg"
-import outside2 from "../../assets/images/outside2.jpg"
-import outside3 from "../../assets/images/outside3.jpg"
-import outside4 from "../../assets/images/outside4.jpg"
-import outside5 from "../../assets/images/outside5.jpg"
-import outside8 from "../../assets/images/outside8.jpg"
 import profile1 from "../../assets/images/profile1.jpg"
 import profile2 from "../../assets/images/profile2.jpg"
 import profile3 from "../../assets/images/profile3.jpg"
@@ -15,11 +10,16 @@ import { useEffect, useState } from 'react';
 import { getPublicHotels } from '../../services/hotelApi';
 import { useNavigate } from 'react-router-dom';
 import BookingForm from '../../components/bookingForm/bookingForm.jsx';
+import PopularSearches from '../../components/PopularSearches.jsx';
+import RoomRecommendationCard from '../../components/RoomRecommendationCard.jsx';
+import { getPersonalizedRoomRecommendations } from '../../services/hotelApi';
 
 import './home.css'
 
 function Home() {
     const [hotels, setHotels] = useState([]);
+    const [roomRecs, setRoomRecs] = useState([]);
+    const [loadingRecs, setLoadingRecs] = useState(true);
     const navigate = useNavigate();
 
     // Handle booking form submit
@@ -41,6 +41,24 @@ function Home() {
             setHotels(res.results ? res.results.filter(h => h.status === 'published') : []);
         }
         fetchHotels();
+        // Fetch personalized recommendations if logged in
+        async function fetchRecs() {
+            setLoadingRecs(true);
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    setRoomRecs([]);
+                    setLoadingRecs(false);
+                    return;
+                }
+                const recs = await getPersonalizedRoomRecommendations(token);
+                setRoomRecs(Array.isArray(recs) ? recs : []);
+            } catch {
+                setRoomRecs([]);
+            }
+            setLoadingRecs(false);
+        }
+        fetchRecs();
     }, []);
 
     return (
@@ -49,8 +67,47 @@ function Home() {
             <div style={{ maxWidth: 1200, margin: '0 auto', padding: '2rem 0' }}>
                 <BookingForm onSubmit={handleBookingFormSubmit} />
             </div>
+
+            {/* Recommendations Section */}
+            <section style={{ maxWidth: 1200, margin: '0 auto', marginBottom: 32 }}>
+                <h2 className="section-header">Recommended for You</h2>
+                {loadingRecs ? (
+                    <div>Loading recommendations...</div>
+                ) : roomRecs.length === 0 ? (
+                    <div style={{ color: '#888', fontSize: '1.1rem', marginBottom: 16 }}>No personalized recommendations yet. Try searching or booking to get recommendations!</div>
+                ) : (
+                    <div style={{ display: 'flex', gap: '1.5rem', overflowX: 'auto', paddingBottom: 8 }}>
+                        {roomRecs.map((rec) => {
+                            const { hotel, room } = rec;
+                            const t = hotel.template_data || {};
+                            const thumb = t.socialThumb || t.fields?.bgImage;
+                            const title = t.socialTitle || t.fields?.title || hotel.name;
+                            const hotelLocation = t.footerLocation || hotel.location || 'Unknown';
+                            return (
+                                <RoomRecommendationCard
+                                    key={room.id}
+                                    room={{
+                                        image: thumb,
+                                        name: room.name || room.room_type,
+                                        type: room.room_type,
+                                        hotelName: title,
+                                        location: hotelLocation,
+                                        price: room.price_per_night || room.price,
+                                        rating: hotel.rating || t.rating || null,
+                                        recommended: true,
+                                        websiteUrl: `/website/preview/${hotel.id}`,
+                                    }}
+                                    onBookNow={() => navigate(`/booking/${hotel.id}?room=${room.id}`)}
+                                    onViewWebsite={() => navigate(`/website/preview/${hotel.id}`)}
+                                />
+                            );
+                        })}
+                    </div>
+                )}
+            </section>
+
             <section className="popular-container">
-                <h2 className="section-header">Popular Hotel Deals Right Now</h2>
+                <h2 className="section-header">Featured Hotels Right Now</h2>
                 <div className="popular-grid">
                     {hotels.map(hotel => {
                         const t = hotel.template_data || {};
@@ -59,7 +116,7 @@ function Home() {
                         const location = t.footerLocation || hotel.location || 'Unknown';
                         let minPrice = 'N/A';
                         if (Array.isArray(t.rooms) && t.rooms.length > 0) {
-                            const prices = t.rooms.map(r => Number(r.price)).filter(p => !isNaN(p));
+                            const prices = t.rooms.map(r => Number(r.price_per_night)).filter(p => !isNaN(p));
                             if (prices.length > 0) minPrice = Math.min(...prices);
                         }
                         return (
@@ -76,6 +133,17 @@ function Home() {
                                             </p>
                                         </div>
                                     </div>
+                                    {/* Amenities section */}
+                                    {Array.isArray(t.amenities) && t.amenities.length > 0 && (
+                                        <div className="popular-amenities" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', margin: '0' }}>
+                                            {t.amenities.map((a, idx) => (
+                                                <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: '0.8rem', fontWeight: 600, color: '#444', background: 'none', border: '1px solid #ddd', borderRadius: 8, padding: '2px 8px' }}>
+                                                    <FontAwesomeIcon icon={["fas", a.icon?.replace('fa-', '') || 'fa-star']} style={{ color: '#0b3e66', fontSize: '0.8rem' }} />
+                                                    <span>{a.title}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                     <div className="popular-deal">
                                         <div className="details">
                                             <div className="details-head">
@@ -97,6 +165,10 @@ function Home() {
                         );
                     })}
                 </div>
+            </section>
+
+            <section className="searches-container">
+                <PopularSearches />
             </section>
 
             <section className="client">

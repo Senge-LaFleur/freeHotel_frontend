@@ -162,6 +162,7 @@ export default function TemplateEditor() {
     const [footerCustomCountry, setFooterCustomCountry] = useState('');
     const [footerCustomTown, setFooterCustomTown] = useState('');
     const [addingRoom, setAddingRoom] = useState(false);
+    const [hotel, setHotel] = useState(null);
 
     const aboutSectionRef = useRef(null);
     const amenitiesSectionRef = useRef(null);
@@ -181,6 +182,7 @@ export default function TemplateEditor() {
                     });
                     if (res.ok) {
                         const hotel = await res.json();
+                        setHotel(hotel);
                         const t = hotel.template_data || {};
                         setFields(t.fields || template.default);
                         setBgType(t.bgType || 'color');
@@ -353,6 +355,14 @@ export default function TemplateEditor() {
             alert('Room number is required');
             return;
         }
+        if (!newRoom.price) {
+            alert('Room price is required');
+            return;
+        }
+        if (!newRoom.capacity) {
+            alert('Room capacity is required');
+            return;
+        }
         setAddingRoom(true);
         const formData = new FormData();
         formData.append('room_number', newRoom.room_number);
@@ -366,12 +376,14 @@ export default function TemplateEditor() {
             if (created && created.id) {
                 await fetchRoomsFromBackend();
                 setNewRoom({ room_number: '', name: '', desc: '', price: '', room_type: '', capacity: 1, is_available: true, beds: '', image: '', imageFile: null });
+            } else if (created && created.detail) {
+                alert('Failed to create room: ' + created.detail);
+            } else if (created && created.errors) {
+                alert('Failed to create room: ' + JSON.stringify(created.errors));
             } else {
-                console.error('Room creation failed:', created);
-                alert('Failed to create room: ' + (created && created.detail ? created.detail : JSON.stringify(created)));
+                alert('Failed to create room. Please check all fields.');
             }
         } catch (err) {
-            console.error('Room creation error:', err);
             alert('Error creating room: ' + (err && err.message ? err.message : err));
         } finally {
             setAddingRoom(false);
@@ -487,7 +499,8 @@ export default function TemplateEditor() {
                 cookieEnabled,
                 footerLocation: getFooterLocation(),
             },
-            status: 'incomplete',
+            // Use current hotel status if published, otherwise incomplete
+            status: hotel && hotel.status === 'published' ? 'published' : 'incomplete',
         };
         try {
             if (hotelId) {
@@ -564,9 +577,28 @@ export default function TemplateEditor() {
             } else {
                 await createHotel(hotelData, userToken);
             }
+            // Try to publish, but if it fails, check if hotel is published anyway
+            let publishError = false;
+            try {
             await publishHotel(hotelId, userToken);
+            } catch (err) {
+                publishError = true;
+            }
+            // Refetch hotel to check status
+            let hotelStatus = 'incomplete';
+            try {
+                const res = await fetch(`http://localhost:8000/api/hotels/${hotelId}/`, { headers: { Authorization: `Token ${userToken}` } });
+                if (res.ok) {
+                    const hotel = await res.json();
+                    hotelStatus = hotel.status;
+                }
+            } catch {}
+            if (hotelStatus === 'published') {
             alert('Hotel published!');
             navigate('/dashboard');
+            } else {
+                alert('Error publishing hotel');
+            }
         } catch (err) {
             alert('Error publishing hotel');
         }

@@ -104,12 +104,20 @@ export default function HotelWebsitePreview({
 
   // Handler to open modal for a room
   function handleBookNow(room) {
+    const userName = typeof window !== 'undefined' ? localStorage.getItem('userName') : '';
+    const userEmail = typeof window !== 'undefined' ? localStorage.getItem('userEmail') : '';
+    const token = localStorage.getItem('token');
+    if (!token || !userName || !userEmail) {
+      alert('Please log in or sign up to book a room.');
+      window.location.href = '/login';
+      return;
+    }
     setReservationForm({
       checkIn: '',
       checkOut: '',
       guests: 1,
-      client_name: '',
-      client_email: '',
+      client_name: userName,
+      client_email: userEmail,
       client_phone: '',
     });
     setReservationModal({ open: true, room });

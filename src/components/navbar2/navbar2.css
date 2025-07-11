@@ -27,6 +27,10 @@
     --box-shadow-1: 0 2rem 3rem var(--color-light);
 }
 
+#navbar2{
+    max-width: 100vw;
+}
+
 
 #navbar2 .navbar2 {
 	height: 56px;

@@ -20,6 +20,10 @@ const Login = () => {
         if (res.ok && data.token) {
             localStorage.setItem('token', data.token);
             localStorage.setItem('userRole', data.user.is_hotel_owner ? 'ADMIN' : 'CLIENT');
+            if (data.user) {
+                if (data.user.username) localStorage.setItem('userName', data.user.username);
+                if (data.user.email) localStorage.setItem('userEmail', data.user.email);
+            }
             // Redirect based on role
             if (data.user && data.user.is_hotel_owner) {
                 navigate('/dashboard');
@@ -31,8 +35,22 @@ const Login = () => {
         }
     };
 
+    const logout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userRole');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('userEmail');
+        window.location.href = '/';
+    };
+
     return (
         <div className="login-form-container">
+            {/* Show logout button if logged in */}
+            {localStorage.getItem('token') && (
+                <button className="btn" style={{ position: 'absolute', top: 16, right: 16 }} onClick={logout}>
+                    Log out
+                </button>
+            )}
             <form onSubmit={handleLogin}>
                 <h2 className="section-header login-form-header">Login</h2>
                 <div className="login-content">

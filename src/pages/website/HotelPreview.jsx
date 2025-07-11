@@ -12,14 +12,15 @@ export default function HotelPreview() {
     useEffect(() => {
         async function fetchHotel() {
             try {
-                const token = localStorage.getItem('token');
-                const res = await fetch(`http://localhost:8000/api/hotels/${hotelId}/`, {
-                    headers: token ? { Authorization: `Token ${token}` } : {}
-                });
+                // Use the public preview endpoint for hotel details
+                const res = await fetch(`http://localhost:8000/api/hotels/public/?id=${hotelId}`);
                 if (res.ok) {
                     const data = await res.json();
-                    setHotel(data);
-                    setRooms(Array.isArray(data.rooms) ? data.rooms : []);
+                    // If the API returns a list, find the hotel by id
+                    let hotelData = data.results ? data.results.find(h => String(h.id) === String(hotelId)) : null;
+                    if (!hotelData && data.id) hotelData = data; // fallback if single object
+                    setHotel(hotelData);
+                    setRooms(Array.isArray(hotelData?.rooms) ? hotelData.rooms : []);
                 }
             } catch (err) {
                 // handle error
@@ -62,10 +63,12 @@ export default function HotelPreview() {
     if (!hotel) return <div>Hotel not found.</div>;
 
     const t = hotel.template_data || {};
-    // Filter options
-    const typeOptions = ['All', 'Standard', 'Deluxe', 'VIP'];
+    // Filter options (match templateEditor and hotelWebsitePreview)
+    const typeOptions = ['Standard', 'Deluxe', 'VIP'];
     const priceOptions = ['All', 'Under100', '100-299', '300-499', '500+'];
-    const capacityOptions = ['All', '1', '2', '3', '4', '5'];
+    const bedsOptions = ['1', '2'];
+    const roomFilterOptions = { type: typeOptions, price: priceOptions, beds: bedsOptions };
+    const roomFilters = { type: 'All', price: 'All', beds: 'All' };
 
     return (
         <div style={{ minWidth: '100vw', width: '100vw', minHeight: '100vh', height: '100vh', background: 'transparent', overflow: 'auto', fontFamily: 'sans-serif', marginTop: 0, padding: 0, position: 'relative' }}>
@@ -88,8 +91,8 @@ export default function HotelPreview() {
                 amenities={t.amenities || []}
                 amenitiesBgColor={t.amenitiesBgColor || '#e9f0f7'}
                 amenitiesPadding={t.amenitiesPadding || 32}
-                roomFilters={{ type: 'All', price: 'All', capacity: 'All' }}
-                roomFilterOptions={{ type: typeOptions, price: priceOptions, capacity: capacityOptions }}
+                roomFilters={roomFilters}
+                roomFilterOptions={roomFilterOptions}
                 rooms={rooms}
                 roomsBgColor={t.roomsBgColor || '#fff'}
                 roomsPadding={t.roomsPadding || 32}

@@ -116,3 +116,32 @@ export async function deleteRoom(hotelId, roomId, token) {
   });
   return res;
 }
+
+// Recommendation API
+export async function getRoomRecommendations(roomId, token) {
+  const res = await fetch(`${API_BASE}${roomId}/recommendations/`, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  });
+  return res.json();
+}
+
+export async function getLocationHotelRecommendations(location) {
+  const res = await fetch(`${API_BASE}recommendations/location/${encodeURIComponent(location)}/`);
+  return res.json();
+}
+
+export async function getPersonalizedRoomRecommendations(token) {
+  const res = await fetch(`${API_BASE}recommendations/personalized/`, {
+    headers: { Authorization: `Token ${token}` },
+  });
+  return res.json();
+}
+
+export async function getUserRoomRecommendations(token) {
+  const res = await fetch(`${API_BASE}recommendations/user/`, {
+    headers: { Authorization: `Token ${token}` },
+  });
+  return res.json();
+}

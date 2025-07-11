@@ -21,11 +21,11 @@ function Reservations() {
 
     useEffect(() => {
         const handleResize = () => {
-            const mobile = window.innerWidth <= 768;
-            setIsMobile(mobile);
+        const mobile = window.innerWidth <= 768;
+        setIsMobile(mobile);
             if (mobile) setIsSidebarExpanded(false);
         };
-
+        
         window.addEventListener('resize', handleResize);
         handleResize();
         return () => window.removeEventListener('resize', handleResize);
@@ -73,21 +73,21 @@ function Reservations() {
         }
     }
 
-    return (
+  return (
         <div className="reservation" id="reservation">
-            {/* ------------------------------ SIDEBAR ------------------------------- */}
-            <Sidebar isExpanded={isSidebarExpanded} toggleSidebar={toggleSidebar} isMobile={isMobile} />
-            <div
+        {/* ------------------------------ SIDEBAR ------------------------------- */}
+        <Sidebar isExpanded={isSidebarExpanded} toggleSidebar={toggleSidebar} isMobile={isMobile} />
+        <div 
                 className={`container ${isSidebarExpanded ? 'expanded' : 'collapsed'}`}
                 style={{ marginLeft: !isMobile && isSidebarExpanded ? '280px' : '100px', transition: 'margin-left 0.3s ease-in-out' }}
-            >
-                {/* ------------------------------ MAIN SECTION ------------------------------- */}
-                <main>
-                    <Navbar2 />
+        >
+            {/* ------------------------------ MAIN SECTION ------------------------------- */}
+            <main>
+                <Navbar2 />
                     <h2 className="section-header">Reservations</h2>
                     <div className="date">
-                        <input type="date" />
-                    </div>
+                    <input type="date" />
+                </div>
                     {loading && <div>Loading reservations...</div>}
                     {error && <div style={{ color: 'red', fontWeight: 'bold' }}>{error}</div>}
                     {!loading && !error && Object.keys(reservationsByHotel).length === 0 && <div>No reservations found.</div>}
@@ -107,23 +107,23 @@ function Reservations() {
                             <h2 style={{ marginBottom: 16, color: '#0b3e66' }}>{hotelName}</h2>
                             <div className="table-data">
                                 <div className="order">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Reserved On</th>
-                                                <th>Check In</th>
-                                                <th>Check Out</th>
-                                                <th>Guests</th>
-                                                <th>Room Price</th>
-                                                <th>Client Name</th>
-                                                <th>Client Email</th>
-                                                <th>Client Phone</th>
-                                                <th>Room ID</th>
-                                                <th>Room Image</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Reserved On</th>
+                                    <th>Check In</th>
+                                    <th>Check Out</th>
+                                    <th>Guests</th>
+                                    <th>Room Price</th>
+                                    <th>Client Name</th>
+                                    <th>Client Email</th>
+                                    <th>Client Phone</th>
+                                    <th>Room ID</th>
+                                    <th>Room Image</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                                             {reservations.map(res => (
                                                 <tr key={res.id}>
                                                     <td>{res.created_at ? new Date(res.created_at).toLocaleDateString() : '-'}</td>
@@ -153,18 +153,18 @@ function Reservations() {
                                                             Delete
                                                         </button>
                                                     </td>
-                                                </tr>
+                                </tr>
                                             ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
                         </section>
                     ))}
-                </main>
-            </div>
+            </main>
         </div>
-    )
+    </div>
+  )
 }
 
 export default Reservations;

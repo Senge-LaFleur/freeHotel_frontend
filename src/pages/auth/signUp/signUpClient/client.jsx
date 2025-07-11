@@ -51,6 +51,8 @@ const Client = () => {
             const token = loginData.token;
             // 3. Success: store token, alert, redirect
             localStorage.setItem('token', token);
+            if (form.username) localStorage.setItem('userName', form.username);
+            if (form.email) localStorage.setItem('userEmail', form.email);
             alert('Registered successfully as client!');
             navigate('/rooms');
         } catch (err) {

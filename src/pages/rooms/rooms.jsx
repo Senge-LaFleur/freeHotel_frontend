@@ -9,6 +9,9 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { createReservation } from '../../services/reservationApi';
 import ReservationModal from '../../components/ReservationModal.jsx';
+import { cameroonTowns } from '../../components/bookingForm/bookingForm.jsx';
+import RoomRecommendationCard from '../../components/RoomRecommendationCard.jsx';
+import { getPersonalizedRoomRecommendations } from '../../services/hotelApi';
 
 function Rooms() {
   const [roomCards, setRoomCards] = useState([]);
@@ -16,6 +19,8 @@ function Rooms() {
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState({});
   const [priceFilter, setPriceFilter] = useState('all');
+  const [roomRecs, setRoomRecs] = useState([]);
+  const [loadingRecs, setLoadingRecs] = useState(true);
   const locationObj = useLocation();
   const navigate = useNavigate();
   const [reservationModal, setReservationModal] = useState({ open: false, room: null });
@@ -122,16 +127,49 @@ function Rooms() {
     fetchRooms();
   }, []);
 
+  // Fetch personalized recommendations if logged in
+  useEffect(() => {
+    async function fetchRecs() {
+      setLoadingRecs(true);
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          setRoomRecs([]);
+          setLoadingRecs(false);
+          return;
+        }
+        const recs = await getPersonalizedRoomRecommendations(token);
+        setRoomRecs(Array.isArray(recs) ? recs : []);
+      } catch {
+        setRoomRecs([]);
+      }
+      setLoadingRecs(false);
+    }
+    fetchRecs();
+  }, []);
+
   // Filtering logic
   let filteredRooms = roomCards;
   let noResults = false;
   if (filter.location && roomCards.length > 0) {
-    filteredRooms = roomCards.filter(room => {
-      if (!room.hotelFooterLocation) return false;
-      // Match if the location (case-insensitive, partial match) is in the footerLocation
-      return room.hotelFooterLocation.toLowerCase().includes(filter.location.toLowerCase());
-    });
-    if (filteredRooms.length === 0) noResults = true;
+    if (filter.location.trim().toLowerCase() === 'other') {
+      // Show rooms in hotels whose location is NOT in cameroonTowns
+      const normalizedCameroonTowns = cameroonTowns.map(t => t.trim().toLowerCase());
+      filteredRooms = roomCards.filter(room => {
+        if (!room.hotelFooterLocation) return false;
+        // Extract city part (before comma, if present)
+        const city = room.hotelFooterLocation.split(',')[0].trim().toLowerCase();
+        return !normalizedCameroonTowns.includes(city);
+      });
+      if (filteredRooms.length === 0) noResults = true;
+    } else {
+      filteredRooms = roomCards.filter(room => {
+        if (!room.hotelFooterLocation) return false;
+        // Match if the location (case-insensitive, partial match) is in the footerLocation
+        return room.hotelFooterLocation.toLowerCase().includes(filter.location.toLowerCase());
+      });
+      if (filteredRooms.length === 0) noResults = true;
+    }
   }
   // Price filter
   if (priceFilter !== 'all' && filteredRooms.length > 0) {
@@ -180,7 +218,11 @@ function Rooms() {
 
   // Open reservation modal
   function handleBookNow(room) {
-    if (!isLoggedIn()) {
+    const userName = typeof window !== 'undefined' ? localStorage.getItem('userName') : '';
+    const userEmail = typeof window !== 'undefined' ? localStorage.getItem('userEmail') : '';
+    const token = localStorage.getItem('token');
+    if (!token || !userName || !userEmail) {
+      alert('Please log in or sign up to book a room.');
       navigate('/login');
       return;
     }
@@ -188,8 +230,8 @@ function Rooms() {
       checkIn: filter.checkIn || '',
       checkOut: filter.checkOut || '',
       guests: (filter.adults || 1) + (filter.children || 0),
-      client_name: '',
-      client_email: '',
+      client_name: userName,
+      client_email: userEmail,
       client_phone: '',
     });
     setReservationModal({ open: true, room });
@@ -242,6 +284,44 @@ function Rooms() {
         </div>
       </section>
 
+      {/* Recommendations Section */}
+      <section style={{ maxWidth: 1200, margin: '0 auto', marginBottom: 32 }}>
+        <h2 className="section-header">Recommended for You</h2>
+        {loadingRecs ? (
+          <div>Loading recommendations...</div>
+        ) : roomRecs.length === 0 ? (
+          <div style={{ color: '#888', fontSize: '1.1rem', marginBottom: 16 }}>No personalized recommendations yet. Try searching or booking to get recommendations!</div>
+        ) : (
+          <div style={{ display: 'flex', gap: '1.5rem', overflowX: 'auto', paddingBottom: 8 }}>
+            {roomRecs.map((rec) => {
+              const { hotel, room } = rec;
+              const t = hotel.template_data || {};
+              const thumb = t.socialThumb || t.fields?.bgImage;
+              const title = t.socialTitle || t.fields?.title || hotel.name;
+              const hotelLocation = t.footerLocation || hotel.location || 'Unknown';
+              return (
+                <RoomRecommendationCard
+                  key={room.id}
+                  room={{
+                    image: thumb,
+                    name: room.name || room.room_type,
+                    type: room.room_type,
+                    hotelName: title,
+                    location: hotelLocation,
+                    price: room.price_per_night || room.price,
+                    rating: hotel.rating || t.rating || null,
+                    recommended: true,
+                    websiteUrl: `/website/preview/${hotel.id}`,
+                  }}
+                  onBookNow={() => handleBookNow(room)}
+                  onViewWebsite={() => navigate(`/website/preview/${hotel.id}`)}
+                />
+              );
+            })}
+          </div>
+        )}
+      </section>
+
       <main className="hotel-listings-container">
         <header className="header">
           <div className="search-filters">
@@ -273,7 +353,7 @@ function Rooms() {
                 <span>$500+</span>
               </div>
             </div>
-            <div className="filter-section">
+            {/* <div className="filter-section">
               <h3>Star rating</h3>
               {[5, 4, 3, 2, 1].map(stars => (
                 <div key={stars} className="star-filter">
@@ -281,7 +361,7 @@ function Rooms() {
                   <label htmlFor={`stars-${stars}`}>{'★'.repeat(stars)}</label>
                 </div>
               ))}
-            </div>
+            </div> */}
           </aside>
 
           <div className="hotels-list">

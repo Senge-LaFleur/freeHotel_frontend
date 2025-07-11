@@ -9,6 +9,9 @@ export default function ReservationModal({
     room
 }) {
     if (!open) return null;
+    const userName = typeof window !== 'undefined' ? localStorage.getItem('userName') : '';
+    const userEmail = typeof window !== 'undefined' ? localStorage.getItem('userEmail') : '';
+    const isLoggedIn = !!userName && !!userEmail;
     return (
         <div className="reservation-modal-overlay">
             <form className="reservation-modal-form" onSubmit={onSubmit}>
@@ -28,11 +31,19 @@ export default function ReservationModal({
                     </div>
                     <div className="modal-field">
                         <label>Name</label>
-                        <input type="text" value={reservationForm.client_name} onChange={e => setReservationForm(f => ({ ...f, client_name: e.target.value }))} required />
+                        <input type="text" value={isLoggedIn ? userName : reservationForm.client_name}
+                            onChange={e => setReservationForm(f => ({ ...f, client_name: e.target.value }))}
+                            required
+                            readOnly={isLoggedIn}
+                        />
                     </div>
                     <div className="modal-field">
                         <label>Email</label>
-                        <input type="email" value={reservationForm.client_email} onChange={e => setReservationForm(f => ({ ...f, client_email: e.target.value }))} required />
+                        <input type="email" value={isLoggedIn ? userEmail : reservationForm.client_email}
+                            onChange={e => setReservationForm(f => ({ ...f, client_email: e.target.value }))}
+                            required
+                            readOnly={isLoggedIn}
+                        />
                     </div>
                     <div className="modal-field">
                         <label>Phone</label>
