@@ -8,11 +8,14 @@ import profile5 from "../../assets/images/profile5.jpg"
 import profile6 from "../../assets/images/profile6.jpg"
 import { useEffect, useState } from 'react';
 import { getPublicHotels } from '../../services/hotelApi';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import BookingForm from '../../components/bookingForm/bookingForm.jsx';
 import PopularSearches from '../../components/PopularSearches.jsx';
 import RoomRecommendationCard from '../../components/RoomRecommendationCard.jsx';
 import { getPersonalizedRoomRecommendations } from '../../services/hotelApi';
+// ADD: import for review API
+import { getReviews, createReview, deleteReview } from '../../services/reviewApi';
+import StarRating from '../../components/StarRating.jsx';
 
 import './home.css'
 
@@ -34,6 +37,23 @@ function Home() {
         if (rooms) params.append('rooms', rooms);
         navigate(`/rooms?${params.toString()}`);
     }
+
+    // ADD: review state
+    const [reviews, setReviews] = useState([]);
+    const [reviewLoading, setReviewLoading] = useState(true);
+    const [reviewError, setReviewError] = useState('');
+    const [stars, setStars] = useState(0);
+    const [comment, setComment] = useState('');
+    const [profilePhoto, setProfilePhoto] = useState(null);
+    const [submitting, setSubmitting] = useState(false);
+    const [deleteLoading, setDeleteLoading] = useState(null);
+    const userName = localStorage.getItem('userName');
+    const userEmail = localStorage.getItem('userEmail');
+    const token = localStorage.getItem('token');
+
+    // Add state for photo preview and file
+    const [photo, setPhoto] = useState(null);
+    const [photoFile, setPhotoFile] = useState(null);
 
     useEffect(() => {
         async function fetchHotels() {
@@ -59,6 +79,18 @@ function Home() {
             setLoadingRecs(false);
         }
         fetchRecs();
+        // Fetch reviews
+        async function fetchReviews() {
+            setReviewLoading(true);
+            try {
+                const res = await getReviews();
+                setReviews(Array.isArray(res.results) ? res.results : res);
+            } catch (err) {
+                setReviewError('Failed to load reviews.');
+            }
+            setReviewLoading(false);
+        }
+        fetchReviews();
     }, []);
 
     return (
@@ -174,85 +206,129 @@ function Home() {
             <section className="client">
                 <div className="section-container client-container">
                     <h2 className="section-header">What our Clients Say</h2>
-                    <div className="client-grid">
-                        <div className="client-card">
-                            <img src={profile1} alt="review-profile" />
-                            <div className="star">
-                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
-                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
-                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
-                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
-                                <FontAwesomeIcon icon={['fas', 'fa-star-half-alt']} id="half-star" />
+                    {/* Modern Review Form (only for authenticated users) */}
+                    <div className="review-form" style={{ maxWidth: 480, margin: '0 auto 32px', background: '#fff', borderRadius: 24, boxShadow: '0 2px 16px #0001', padding: 32 }}>
+                        <h2 style={{ textAlign: 'center', fontWeight: 700, marginBottom: 24 }}>Share Your Experience</h2>
+                        {token ? (
+                            <form className="review-form" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}
+                                onSubmit={async (e) => {
+                                    e.preventDefault();
+                                    setSubmitting(true);
+                                    setReviewError('');
+                                    try {
+                                        const formData = new FormData();
+                                        formData.append('stars', stars);
+                                        formData.append('comment', comment);
+                                        if (photoFile) formData.append('profile_photo', photoFile);
+                                        await createReview(formData, token);
+                                        // Refresh reviews
+                                        const res = await getReviews();
+                                        setReviews(Array.isArray(res.results) ? res.results : res);
+                                        setStars(0);
+                                        setComment('');
+                                        setPhoto(null);
+                                        setPhotoFile(null);
+                                    } catch (err) {
+                                        setReviewError('Failed to submit review.');
+                                    }
+                                    setSubmitting(false);
+                                }}>
+                                <div className="form-group">
+                                    <label style={{ fontWeight: 600, marginBottom: 4 }}>Your Photo (Required)</label>
+                                    <input type="file" accept="image/*" required
+                                        onChange={e => {
+                                            if (e.target.files && e.target.files[0]) {
+                                                setPhotoFile(e.target.files[0]);
+                                                setPhoto(URL.createObjectURL(e.target.files[0]));
+                                            } else {
+                                                setPhotoFile(null);
+                                                setPhoto(null);
+                                            }
+                                        }}
+                                        style={{ padding: 8, borderRadius: 8, border: '1px solid #eee', background: '#fafbfc' }} />
+                                    {photo && (
+                                        <img
+                                            src={photo}
+                                            alt="Preview"
+                                            style={{ width: '100px', height: '100px', objectFit: 'cover', marginTop: '10px', borderRadius: '50%' }}
+                                        />
+                                    )}
+                                </div>
+                                <div className="form-group">
+                                    <label style={{ fontWeight: 600, marginBottom: 4 }}>Rating (Required)</label>
+                                    <StarRating value={stars} onChange={setStars} showValue={true} />
+                                </div>
+                                <div className="form-group">
+                                    <label style={{ fontWeight: 600, marginBottom: 4 }}>Comment (Optional)</label>
+                                    <textarea value={comment} onChange={e => setComment(e.target.value)}
+                                        placeholder="Share your experience..." rows={3}
+                                        style={{ resize: 'vertical', borderRadius: 8, border: '1px solid #eee', padding: 12, fontSize: 16, background: '#fafbfc' }} />
+                                </div>
+                                <button className="btn" type="submit" disabled={submitting}
+                                    style={{ width: '100%' }}>
+                                    {submitting ? 'Submitting...' : 'Submit Review'}
+                                </button>
+                                {reviewError && <span style={{ color: 'red', marginLeft: 8 }}>{reviewError}</span>}
+                            </form>
+                        ) : (
+                            <div style={{ marginBottom: 24 }}>
+                                <span>You must <a href="/login">login</a> or <a href="/signUp">register</a> to leave a review.</span>
                             </div>
-                            <p>The booking process was seamless, and the confirmation was instant.
-                                I highly recommend FreeHotel for hassle-free hotel bookings.
-                            </p>
+                        )}
+                    </div>
+                    {/* Review Grid */}
+                    {reviewLoading ? (
+                        <div>Loading reviews...</div>
+                    ) : reviews.length === 0 ? (
+                        <div style={{ color: '#888', fontSize: '1.1rem', marginBottom: 16 }}>No reviews yet. Be the first to review!</div>
+                    ) : (
+                        <div className="client-grid">
+                            {reviews.slice(0, 6).map((review) => (
+                                <div className="client-card" key={review.id} style={{ background: '#fff', borderRadius: 16, boxShadow: '0 2px 12px #0003', padding: 24, color: '#222' }}>
+                                    {/* Card header: profile, name, date on left; stars on right */}
+                                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+                                        <img src={review.profile_photo || profile1} alt="review-profile" style={{ width: 48, height: 48, borderRadius: '50%', objectFit: 'cover', marginRight: 14 }} />
+                                        <div style={{ flex: 1 }}>
+                                            <div style={{ fontWeight: 600, fontSize: 17 }}>{review.username}</div>
+                                            <div style={{ color: '#888', fontSize: 13 }}>{new Date(review.created_at).toLocaleDateString()}</div>
+                                        </div>
+                                        <div className="star" style={{ marginLeft: 12, minWidth: 100, textAlign: 'right' }}>
+                                            {[...Array(5)].map((_, i) => (
+                                                <FontAwesomeIcon
+                                                    key={i}
+                                                    icon={['fas', 'fa-star']}
+                                                    style={{ color: i < review.stars ? '#FFC107' : '#e0e0e0', fontSize: 18 }}
+                                                />
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <p style={{ minHeight: 48, color: '#444', marginBottom: 0 }}>{review.comment}</p>
+                                    <div style={{ fontSize: '0.9em', color: '#888', marginTop: 8 }}>
+                                        <span>{review.email}</span>
+                                    </div>
+                                    {token && userEmail === review.email && (
+                                        <button className="btn" style={{ marginTop: 8, background: '#e74c3c', color: '#fff' }}
+                                            disabled={deleteLoading === review.id}
+                                            onClick={async () => {
+                                                setDeleteLoading(review.id);
+                                                try {
+                                                    await deleteReview(review.id, token);
+                                                    setReviews(reviews.filter(r => r.id !== review.id));
+                                                } catch {
+                                                    alert('Failed to delete review.');
+                                                }
+                                                setDeleteLoading(null);
+                                            }}>
+                                            {deleteLoading === review.id ? 'Deleting...' : 'Delete'}
+                                        </button>
+                                    )}
+                                </div>
+                            ))}
                         </div>
-                        <div className="client-card">
-                            <img src={profile2} alt="review-profile" />
-                            <div className="star">
-                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
-                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
-                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
-                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
-                                <FontAwesomeIcon icon={['fas', 'fa-star-half-alt']} id="half-star" />
-                            </div>
-                            <p>The booking process was seamless, and the confirmation was instant.
-                                I highly recommend FreeHotel for hassle-free hotel bookings.
-                            </p>
-                        </div>
-                        <div className="client-card">
-                            <img src={profile3} alt="review-profile" />
-                            <div className="star">
-                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
-                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
-                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
-                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
-                                <FontAwesomeIcon icon={['fas', 'fa-star-half-alt']} id="half-star" />
-                            </div>
-                            <p>The booking process was seamless, and the confirmation was instant.
-                                I highly recommend FreeHotel for hassle-free hotel bookings.
-                            </p>
-                        </div>
-                        <div className="client-card">
-                            <img src={profile4} alt="review-profile" />
-                            <div className="star">
-                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
-                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
-                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
-                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
-                                <FontAwesomeIcon icon={['fas', 'fa-star-half-alt']} id="half-star" />
-                            </div>
-                            <p>The booking process was seamless, and the confirmation was instant.
-                                I highly recommend FreeHotel for hassle-free hotel bookings.
-                            </p>
-                        </div>
-                        <div className="client-card">
-                            <img src={profile5} alt="review-profile" />
-                            <div className="star">
-                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
-                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
-                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
-                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
-                                <FontAwesomeIcon icon={['fas', 'fa-star-half-alt']} id="half-star" />
-                            </div>
-                            <p>The booking process was seamless, and the confirmation was instant.
-                                I highly recommend FreeHotel for hassle-free hotel bookings.
-                            </p>
-                        </div>
-                        <div className="client-card">
-                            <img src={profile6} alt="review-profile" />
-                            <div className="star">
-                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
-                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
-                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
-                                <FontAwesomeIcon icon={['fas', 'fa-star']} />
-                                <FontAwesomeIcon icon={['fas', 'fa-star-half-alt']} id="half-star" />
-                            </div>
-                            <p>The booking process was seamless, and the confirmation was instant.
-                                I highly recommend FreeHotel for hassle-free hotel bookings.
-                            </p>
-                        </div>
+                    )}
+                    {/* See more reviews link */}
+                    <div style={{ marginTop: 16, textAlign: 'center' }}>
+                        <Link to="/review" className="btn" style={{ textDecoration: 'none' }}>See more reviews</Link>
                     </div>
                 </div>
             </section>

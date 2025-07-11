@@ -377,17 +377,17 @@ export default function HotelWebsitePreview({
                 <select value={selectedType} onChange={e => setSelectedType(e.target.value)}>
                   <option value="All">All</option>
                   {roomFilterOptions.type && roomFilterOptions.type.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-                </select>
+                  </select>
                 <span style={{ fontSize: '1.2rem' }}><FontAwesomeIcon icon={["fas", "fa-dollar-sign"]} /></span>
                 <select value={selectedPrice} onChange={e => setSelectedPrice(e.target.value)}>
                   {priceOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
-                </select>
+                  </select>
                 <span style={{ fontSize: '1.2rem' }}><FontAwesomeIcon icon={["fas", "fa-users"]} /></span>
                 <select value={selectedBeds} onChange={e => setSelectedBeds(e.target.value)}>
                   <option value="All">All</option>
                   {roomFilterOptions.beds && roomFilterOptions.beds.map(opt => <option key={opt} value={opt}>{opt} bed</option>)}
-                </select>
-              </div>
+                  </select>
+                </div>
               {/* Room grid */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem', alignItems: 'center', justifyContent: 'center', overflowX: 'auto', padding: '0 1rem' }}>
                 {filteredRooms.map((r, idx) => (

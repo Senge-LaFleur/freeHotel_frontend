@@ -15,6 +15,7 @@ import HotelPreview from './pages/website/HotelPreview.jsx';
 import RoomsTable from './pages/roomsTable/roomsTable.jsx';
 import Payment from './pages/payments/payment.jsx';
 import Plan from './pages/payments/websitePlan/plan.jsx';
+import ReviewPage from './pages/review/review.jsx';
 import LocationRecommendations from './pages/recommendations/LocationRecommendations.jsx';
 import PersonalizedRecommendations from './pages/recommendations/PersonalizedRecommendations.jsx';
 import './App.css'
@@ -37,6 +38,7 @@ function App() {
         <Route path="/plans" element={<Plan />} />
         <Route path="/roomsTable" element={<RoomsTable />} />
         <Route path="/reservations" element={<Reservations />} />
+        <Route path="/review" element={<ReviewPage />} />
         <Route path="/recommendations/location/:location" element={<LocationRecommendations />} />
         <Route path="/recommendations/personalized" element={<PersonalizedRecommendations />} />
 
