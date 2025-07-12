@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getPersonalizedRoomRecommendations } from '../../services/hotelApi';
+import { getPersonalizedRoomRecommendations } from '../../services/recommendationApi';
 import Navbar from '../../components/navbar/navbar.jsx';
 import Footer from '../../components/footer/footer.jsx';
 import RoomRecommendationCard from '../../components/RoomRecommendationCard.jsx';

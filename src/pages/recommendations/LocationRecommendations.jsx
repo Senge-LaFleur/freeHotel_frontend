@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getLocationHotelRecommendations } from '../../services/hotelApi';
+import { getLocationHotelRecommendations } from '../../services/recommendationApi';
 import Navbar from '../../components/navbar/navbar.jsx';
 import Footer from '../../components/footer/footer.jsx';
 import outside1 from '../../assets/images/outside1.jpg';

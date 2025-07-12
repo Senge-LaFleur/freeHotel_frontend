@@ -32,7 +32,7 @@ export default function RoomRecommendationCard({ room, onBookNow, onViewWebsite 
                     {price && <span className="room-rec-price">${price}/night</span>}
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
-                    <button className="room-rec-btn" onClick={onBookNow}>
+                    <button className="btn" onClick={onBookNow}>
                         Book Now
                     </button>
                     {onViewWebsite && (

@@ -5,6 +5,8 @@ import profile1 from '../../assets/images/profile1.jpg';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/navbar/navbar.jsx';
 import Footer from '../../components/footer/footer.jsx';
+import StarRating from '../../components/StarRating.jsx';
+import { createReview } from '../../services/reviewApi';
 
 const STAR_LABELS = [5, 4, 3, 2, 1];
 
@@ -15,6 +17,12 @@ export default function ReviewPage() {
     const [deleteLoading, setDeleteLoading] = useState(null);
     const [stats, setStats] = useState(null);
     const [statsLoading, setStatsLoading] = useState(true);
+    const [stars, setStars] = useState(0);
+    const [comment, setComment] = useState('');
+    const [photo, setPhoto] = useState(null);
+    const [photoFile, setPhotoFile] = useState(null);
+    const [submitting, setSubmitting] = useState(false);
+    const [reviewError, setReviewError] = useState('');
     const userEmail = localStorage.getItem('userEmail');
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
@@ -53,7 +61,7 @@ export default function ReviewPage() {
     return (
         <>
             <Navbar />
-            <main style={{ minHeight: '70vh', background: '#fff', color: '#222' }}>
+            <main style={{ minHeight: '70vh', background: '#fff', color: '#222', paddingTop: '5rem' }}>
                 <div style={{ maxWidth: 900, margin: '40px auto', padding: 24 }}>
                     <button className="btn" style={{ marginBottom: 24 }} onClick={() => navigate('/')}>← Back to Home</button>
                     <h2 style={{ textAlign: 'center', fontWeight: 700, marginBottom: 32 }}>Ratings and reviews</h2>
@@ -82,7 +90,7 @@ export default function ReviewPage() {
                                     <div style={{ flex: 1, background: '#f0f0f0', borderRadius: 8, height: 10, margin: '0 8px', overflow: 'hidden' }}>
                                         <div style={{
                                             width: stats && maxCount > 0 ? `${(stats.stars[star] / maxCount) * 100}%` : 0,
-                                            background: '#e0e0e0',
+                                            background: '#379deb',
                                             height: '100%',
                                             borderRadius: 8,
                                             transition: 'width 0.4s'
@@ -94,6 +102,75 @@ export default function ReviewPage() {
                         </div>
                     </div>
                     {/* End Review Statistics */}
+                    <div style={{ maxWidth: 480, margin: '32px auto', background: '#fff', borderRadius: 24, boxShadow: '0 2px 16px #0001', padding: 32 }}>
+                        <h2 style={{ textAlign: 'center', fontWeight: 700, marginBottom: 24 }}>Share Your Experience</h2>
+                        {token ? (
+                            <form className="review-form" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}
+                                onSubmit={async (e) => {
+                                    e.preventDefault();
+                                    setSubmitting(true);
+                                    setReviewError('');
+                                    try {
+                                        const formData = new FormData();
+                                        formData.append('stars', stars);
+                                        formData.append('comment', comment);
+                                        if (photoFile) formData.append('profile_photo', photoFile);
+                                        await createReview(formData, token);
+                                        // Refresh reviews
+                                        const res = await getReviews();
+                                        setReviews(Array.isArray(res.results) ? res.results : res);
+                                        setStars(0);
+                                        setComment('');
+                                        setPhoto(null);
+                                        setPhotoFile(null);
+                                    } catch (err) {
+                                        setReviewError('Failed to submit review.');
+                                    }
+                                    setSubmitting(false);
+                                }}>
+                                <div className="form-group">
+                                    <label style={{ fontWeight: 600, marginBottom: 4 }}>Your Photo (Required)</label>
+                                    <input type="file" accept="image/*" required
+                                        onChange={e => {
+                                            if (e.target.files && e.target.files[0]) {
+                                                setPhotoFile(e.target.files[0]);
+                                                setPhoto(URL.createObjectURL(e.target.files[0]));
+                                            } else {
+                                                setPhotoFile(null);
+                                                setPhoto(null);
+                                            }
+                                        }}
+                                        style={{ padding: 8, borderRadius: 8, border: '1px solid #eee', background: '#fafbfc' }} />
+                                    {photo && (
+                                        <img
+                                            src={photo}
+                                            alt="Preview"
+                                            style={{ width: '100px', height: '100px', objectFit: 'cover', marginTop: '10px', borderRadius: '50%' }}
+                                        />
+                                    )}
+                                </div>
+                                <div className="form-group">
+                                    <label style={{ fontWeight: 600, marginBottom: 4 }}>Rating (Required)</label>
+                                    <StarRating value={stars} onChange={setStars} showValue={true} />
+                                </div>
+                                <div className="form-group">
+                                    <label style={{ fontWeight: 600, marginBottom: 4 }}>Comment (Optional)</label>
+                                    <textarea value={comment} onChange={e => setComment(e.target.value)}
+                                        placeholder="Share your experience..." rows={3}
+                                        style={{ resize: 'vertical', borderRadius: 8, border: '1px solid #eee', padding: 12, fontSize: 16, background: '#fafbfc' }} />
+                                </div>
+                                <button className="btn" type="submit" disabled={submitting}
+                                    style={{ width: '100%' }}>
+                                    {submitting ? 'Submitting...' : 'Submit Review'}
+                                </button>
+                                {reviewError && <span style={{ color: 'red', marginLeft: 8 }}>{reviewError}</span>}
+                            </form>
+                        ) : (
+                            <div style={{ marginBottom: 24 }}>
+                                <span>You must <a href="/login">login</a> or <a href="/signUp">register</a> to leave a review.</span>
+                            </div>
+                        )}
+                    </div>
                     {loading ? (
                         <div>Loading reviews...</div>
                     ) : error ? (

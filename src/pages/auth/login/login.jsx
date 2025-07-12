@@ -28,7 +28,7 @@ const Login = () => {
             if (data.user && data.user.is_hotel_owner) {
                 navigate('/dashboard');
             } else {
-                navigate('/rooms');
+                navigate('/');
             }
         } else {
             alert('Login failed: ' + (data.detail || 'Unknown error'));

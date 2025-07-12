@@ -4,9 +4,9 @@ import './header.css'
 
 
 
-function Header(){
+function Header() {
 
-    return(
+    return (
         <div class="header">
             <Navbar />
             <section className="header-container">
