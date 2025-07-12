@@ -523,7 +523,61 @@ export default function TemplateEditor() {
             return;
         }
         try {
-            // Always save progress before publishing
+            // If hotel is already published, just save changes and do not redirect
+            if (hotel && hotel.status === 'published') {
+                const hotelData = {
+                    name: footerName,
+                    logo_text: footerName,
+                    slogan: footerSlogan,
+                    footer_email: footerContacts.find(c => c.type === 'email')?.value,
+                    footer_phone: footerContacts.find(c => c.type === 'phone')?.value,
+                    domain_name: domain,
+                    template_data: {
+                        fields,
+                        bgType,
+                        bgImage,
+                        bgBrightness,
+                        buttonHoverBg,
+                        buttonHoverText,
+                        generalPadding,
+                        navbarPadding,
+                        heroPadding,
+                        aboutTitle,
+                        aboutParagraph,
+                        aboutImage,
+                        aboutBgColor,
+                        aboutPadding,
+                        aboutLayout,
+                        amenities,
+                        amenitiesBgColor,
+                        amenitiesPadding,
+                        roomFilters,
+                        roomFilterOptions,
+                        rooms,
+                        roomsBgColor,
+                        roomsPadding,
+                        footerLogo,
+                        footerName,
+                        footerSlogan,
+                        footerLinks,
+                        footerContacts,
+                        footerSocials,
+                        footerBgColor,
+                        footerPadding,
+                        favicon,
+                        socialThumb,
+                        socialTitle,
+                        socialDesc,
+                        cookieEnabled,
+                        footerLocation: getFooterLocation(),
+                    },
+                    status: 'published',
+                };
+                await updateHotel(hotelId, hotelData, userToken);
+                alert('Changes saved!');
+                return;
+            }
+            // Always save progress before redirecting to plan selection
             const hotelData = {
                 name: footerName,
                 logo_text: footerName,
@@ -570,37 +624,19 @@ export default function TemplateEditor() {
                     cookieEnabled,
                     footerLocation: getFooterLocation(),
                 },
-                status: 'published',
+                status: 'incomplete',
             };
+            let savedHotelId = hotelId;
             if (hotelId) {
                 await updateHotel(hotelId, hotelData, userToken);
             } else {
-                await createHotel(hotelData, userToken);
+                const created = await createHotel(hotelData, userToken);
+                savedHotelId = created && created.id;
             }
-            // Try to publish, but if it fails, check if hotel is published anyway
-            let publishError = false;
-            try {
-            await publishHotel(hotelId, userToken);
-            } catch (err) {
-                publishError = true;
-            }
-            // Refetch hotel to check status
-            let hotelStatus = 'incomplete';
-            try {
-                const res = await fetch(`http://localhost:8000/api/hotels/${hotelId}/`, { headers: { Authorization: `Token ${userToken}` } });
-                if (res.ok) {
-                    const hotel = await res.json();
-                    hotelStatus = hotel.status;
-                }
-            } catch {}
-            if (hotelStatus === 'published') {
-            alert('Hotel published!');
-            navigate('/dashboard');
-            } else {
-                alert('Error publishing hotel');
-            }
+            // Redirect to plan selection page, passing hotelId if needed
+            navigate('/plans', { state: { hotelId: savedHotelId } });
         } catch (err) {
-            alert('Error publishing hotel');
+            alert('Error saving hotel before plan selection');
         }
     };
 

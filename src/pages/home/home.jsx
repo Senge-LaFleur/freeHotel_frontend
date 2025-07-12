@@ -94,12 +94,28 @@ function Home() {
         }
         const { room } = reservationModal;
         try {
-            // Assuming createReservation is available from a booking service
-            // For now, we'll just alert success, as the actual reservation logic
-            // would involve a POST request to an API endpoint.
-            // In a real app, you'd call a function like createReservation(data, token)
-            // from a booking API service.
-            alert('Reservation successful!');
+            const { createReservation } = await import('../../services/reservationApi');
+            const reservation = await createReservation({
+                room: room.id,
+                check_in: reservationForm.checkIn,
+                check_out: reservationForm.checkOut,
+                guests: Number(reservationForm.guests),
+                price: Number(room.price_per_night || room.price),
+                room_image: room.image,
+                client_name: reservationForm.client_name,
+                client_email: reservationForm.client_email,
+                client_phone: reservationForm.client_phone,
+            }, token);
+            // Redirect to payment page with reservation and room info
+            navigate('/payment', {
+                state: {
+                    reservationId: reservation.id,
+                    amount: Number(room.price_per_night || room.price),
+                    client_name: reservationForm.client_name,
+                    client_email: reservationForm.client_email,
+                    room,
+                }
+            });
             setReservationModal({ open: false, room: null });
         } catch (err) {
             alert('Reservation failed: ' + err.message);

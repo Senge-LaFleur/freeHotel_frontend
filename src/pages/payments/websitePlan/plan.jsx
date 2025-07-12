@@ -1,15 +1,16 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import "./plan.css";
 
 const plans = [
     {
-        name: "Free Plan",
-        price: 0,
-        oldPrice: 5,
-        save: "100% OFF",
-        desc: "Get started for free. Perfect for individuals and photo publication.",
+        name: "Beginner",
+        value: "Free",
+        price: 5,
+        oldPrice: 10,
+        save: "50% OFF",
+        desc: "Get started with a beginner website. Perfect for individuals and photo publication.",
         features: [
             "1 website",
             "Basic support",
@@ -17,12 +18,13 @@ const plans = [
             "Free SSL",
             "Limited analytics",
         ],
-        button: "Choose Free Plan",
+        button: "Choose Beginner Plan",
         badge: "Free Forever",
         popular: false,
     },
     {
-        name: "Pro Upgrade",
+        name: "Pro",
+        value: "Pro",
         price: 10,
         oldPrice: 33.33,
         save: "SAVE 70%",
@@ -42,7 +44,8 @@ const plans = [
         popular: true,
     },
     {
-        name: "Business Ventures",
+        name: "Business",
+        value: "Business",
         price: 50,
         oldPrice: 125,
         save: "SAVE 60%",
@@ -65,8 +68,7 @@ const plans = [
     },
 ];
 
-
-const PlanCard = ({ plan }) => (
+const PlanCard = ({ plan, onChoose }) => (
     <div className={`plan-card${plan.popular ? " most-popular" : ""}`}>
         <div className="plan-badge">{plan.badge}</div>
         <div className="plan-name">{plan.name}</div>
@@ -87,37 +89,45 @@ const PlanCard = ({ plan }) => (
         <ul className="plan-features">
             {plan.features.map((feature, idx) => (
                 <li key={idx}>
-                    <FontAwesomeIcon icon={['fas','fa-check']} className="check" />
+                    <FontAwesomeIcon icon={['fas', 'fa-check']} className="check" />
                     {feature}
                 </li>
             ))}
         </ul>
         <div className="plan-action">
-            <button className="btn">{plan.button}</button>
+            <button className="btn" onClick={() => onChoose(plan)}>{plan.button}</button>
         </div>
     </div>
 );
 
-const Plan = () => (
-    <>
-        <nav className="editor-navbar">
-            <div className="navbar-left">
-                <span className="navbar-title">FreeHotel</span>
-                <Link to="/editor/default" className="navbar-back">&gt; Back</Link>
-            </div>
-        </nav>
-        <section className="plan-section">
-            <h1 className="plan-title">Pick your perfect plan</h1>
-            <div className="plan-subtitle">
-                Choose the plan that fits your needs and launch online in minutes.
-            </div>
-            <div className="plan-cards">
-                {plans.map((plan, idx) => (
-                    <PlanCard plan={plan} key={plan.name} />
-                ))}
-            </div>
-        </section>
-    </>
-);
+const Plan = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const hotelId = location.state?.hotelId;
+    const handleChoosePlan = (plan) => {
+        navigate('/payment', { state: { plan, hotelId } });
+    };
+    return (
+        <>
+            <nav className="editor-navbar">
+                <div className="navbar-left">
+                    <span className="navbar-title">FreeHotel</span>
+                    <Link to="/editor/default" className="navbar-back">&gt; Back</Link>
+                </div>
+            </nav>
+            <section className="plan-section">
+                <h1 className="plan-title">Pick your perfect plan</h1>
+                <div className="plan-subtitle">
+                    Choose the plan that fits your needs and launch online in minutes.
+                </div>
+                <div className="plan-cards">
+                    {plans.map((plan, idx) => (
+                        <PlanCard plan={plan} key={plan.name} onChoose={handleChoosePlan} />
+                    ))}
+                </div>
+            </section>
+        </>
+    );
+};
 
 export default Plan;

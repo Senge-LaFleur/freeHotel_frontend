@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ReservationModal from './ReservationModal.jsx';
 import { createReservation } from '../services/reservationApi';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function HotelWebsitePreview({
@@ -101,6 +102,7 @@ export default function HotelWebsitePreview({
   const [bookingLoading, setBookingLoading] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [bookingError, setBookingError] = useState('');
+  const navigate = useNavigate();
 
   // Handler to open modal for a room
   function handleBookNow(room) {
@@ -130,7 +132,7 @@ export default function HotelWebsitePreview({
     setBookingError('');
     try {
       const token = localStorage.getItem('token');
-      await createReservation({
+      const reservation = await createReservation({
         room: reservationModal.room.id,
         check_in: reservationForm.checkIn,
         check_out: reservationForm.checkOut,
@@ -141,10 +143,18 @@ export default function HotelWebsitePreview({
         client_email: reservationForm.client_email,
         client_phone: reservationForm.client_phone,
       }, token);
+      // Redirect to payment page with reservation and room info
+      navigate('/payment', {
+        state: {
+          reservationId: reservation.id,
+          amount: Number(reservationModal.room.price_per_night || reservationModal.room.price),
+          client_name: reservationForm.client_name,
+          client_email: reservationForm.client_email,
+          room: reservationModal.room,
+        }
+      });
       setBookingSuccess(true);
       setReservationModal({ open: false, room: null });
-      // Optionally, re-fetch rooms from backend here if you have a fetchRoomsFromBackend function
-      // await fetchRoomsFromBackend();
     } catch (err) {
       setBookingError('Reservation failed: ' + (err.message || 'Unknown error'));
     } finally {
@@ -377,17 +387,17 @@ export default function HotelWebsitePreview({
                 <select value={selectedType} onChange={e => setSelectedType(e.target.value)}>
                   <option value="All">All</option>
                   {roomFilterOptions.type && roomFilterOptions.type.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-                  </select>
+                </select>
                 <span style={{ fontSize: '1.2rem' }}><FontAwesomeIcon icon={["fas", "fa-dollar-sign"]} /></span>
                 <select value={selectedPrice} onChange={e => setSelectedPrice(e.target.value)}>
                   {priceOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
-                  </select>
+                </select>
                 <span style={{ fontSize: '1.2rem' }}><FontAwesomeIcon icon={["fas", "fa-users"]} /></span>
                 <select value={selectedBeds} onChange={e => setSelectedBeds(e.target.value)}>
                   <option value="All">All</option>
                   {roomFilterOptions.beds && roomFilterOptions.beds.map(opt => <option key={opt} value={opt}>{opt} bed</option>)}
-                  </select>
-                </div>
+                </select>
+              </div>
               {/* Room grid */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem', alignItems: 'center', justifyContent: 'center', overflowX: 'auto', padding: '0 1rem' }}>
                 {filteredRooms.map((r, idx) => (

@@ -28,4 +28,17 @@ export async function deleteReservation(reservationId, token) {
     });
     if (!res.ok) throw new Error(await res.text());
     return true;
+}
+
+export async function updateReservationStatus(reservationId, status, token) {
+    const res = await fetch(`http://localhost:8000/api/reservations/${reservationId}/update_status/`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Token ${token}`,
+        },
+        body: JSON.stringify({ status }),
+    });
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
 } 

@@ -263,7 +263,7 @@ function Rooms() {
     }
     const { room } = reservationModal;
     try {
-      await createReservation({
+      const reservation = await createReservation({
         room: room.id, // This is now the real Room model ID
         check_in: reservationForm.checkIn,
         check_out: reservationForm.checkOut,
@@ -274,7 +274,16 @@ function Rooms() {
         client_email: reservationForm.client_email,
         client_phone: reservationForm.client_phone,
       }, token);
-      alert('Reservation successful!');
+      // Redirect to payment page with reservation and room info
+      navigate('/payment', {
+        state: {
+          reservationId: reservation.id,
+          amount: Number(room.price_per_night || room.price),
+          client_name: reservationForm.client_name,
+          client_email: reservationForm.client_email,
+          room,
+        }
+      });
       setReservedRoomIds(ids => [...ids, room.id]);
       setReservationModal({ open: false, room: null });
     } catch (err) {
@@ -406,67 +415,67 @@ function Rooms() {
               </div>
             ))}
           </div>
-          
-      
+
+
         </div>
 
         {/* Recommendations Section - moved below booking form, with extra margin */}
         <section
-            className="recommendations-section responsive-recommendations"
-            style={{ maxWidth: 1200, margin: '0 auto', marginBottom: 32, marginTop: '7rem' }}
+          className="recommendations-section responsive-recommendations"
+          style={{ maxWidth: 1200, margin: '0 auto', marginBottom: 32, marginTop: '7rem' }}
         >
-            <h2 className="section-header" style={{ marginBottom: 16 }}>
-              {localStorage.getItem('token') ? 'Recommended for You' : 'Popular Rooms'}
-            </h2>
-            {loadingRecs ? (
-              <div>Loading recommendations...</div>
-            ) : roomRecs.length === 0 ? (
-              <div style={{ color: '#888', fontSize: '1.1rem', marginBottom: 16 }}>
-                {localStorage.getItem('token')
-                  ? 'No personalized or popular recommendations yet. Try searching or booking to get recommendations!'
-                  : 'No popular rooms available at the moment. Check back later!'}
-              </div>
-            ) : (
-              <div
-                className="recommendations-grid"
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-                  gap: '1.5rem',
-                  overflowX: 'auto',
-                  paddingBottom: 8,
-                  paddingLeft: 4,
-                  paddingRight: 4,
-                  paddingTop: 10,
-                }}
-              >
-                {roomRecs.map((room) => {
-                  const hotel = room.hotel;
-                  const t = hotel?.template_data || {};
-                  const thumb = t.socialThumb || t.fields?.bgImage;
-                  const title = t.socialTitle || t.fields?.title || hotel?.name;
-                  const hotelLocation = t.footerLocation || hotel?.location || 'Unknown';
-                  return (
-                    <RoomRecommendationCard
-                      key={room.id}
-                      room={{
-                        image: thumb,
-                        name: room.name || room.room_type,
-                        type: room.room_type,
-                        hotelName: title,
-                        location: hotelLocation,
-                        price: room.price_per_night || room.price,
-                        rating: hotel?.rating || t.rating || null,
-                        recommended: true,
-                        websiteUrl: hotel ? `/website/preview/${hotel.id}` : '#',
-                      }}
-                      onBookNow={() => handleBookNow(room)}
-                      onViewWebsite={() => hotel && navigate(`/website/preview/${hotel.id}`)}
-                    />
-                  );
-                })}
-              </div>
-            )}
+          <h2 className="section-header" style={{ marginBottom: 16 }}>
+            {localStorage.getItem('token') ? 'Recommended for You' : 'Popular Rooms'}
+          </h2>
+          {loadingRecs ? (
+            <div>Loading recommendations...</div>
+          ) : roomRecs.length === 0 ? (
+            <div style={{ color: '#888', fontSize: '1.1rem', marginBottom: 16 }}>
+              {localStorage.getItem('token')
+                ? 'No personalized or popular recommendations yet. Try searching or booking to get recommendations!'
+                : 'No popular rooms available at the moment. Check back later!'}
+            </div>
+          ) : (
+            <div
+              className="recommendations-grid"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+                gap: '1.5rem',
+                overflowX: 'auto',
+                paddingBottom: 8,
+                paddingLeft: 4,
+                paddingRight: 4,
+                paddingTop: 10,
+              }}
+            >
+              {roomRecs.map((room) => {
+                const hotel = room.hotel;
+                const t = hotel?.template_data || {};
+                const thumb = t.socialThumb || t.fields?.bgImage;
+                const title = t.socialTitle || t.fields?.title || hotel?.name;
+                const hotelLocation = t.footerLocation || hotel?.location || 'Unknown';
+                return (
+                  <RoomRecommendationCard
+                    key={room.id}
+                    room={{
+                      image: thumb,
+                      name: room.name || room.room_type,
+                      type: room.room_type,
+                      hotelName: title,
+                      location: hotelLocation,
+                      price: room.price_per_night || room.price,
+                      rating: hotel?.rating || t.rating || null,
+                      recommended: true,
+                      websiteUrl: hotel ? `/website/preview/${hotel.id}` : '#',
+                    }}
+                    onBookNow={() => handleBookNow(room)}
+                    onViewWebsite={() => hotel && navigate(`/website/preview/${hotel.id}`)}
+                  />
+                );
+              })}
+            </div>
+          )}
         </section>
       </main>
       <Footer />
