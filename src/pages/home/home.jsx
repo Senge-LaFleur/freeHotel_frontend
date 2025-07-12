@@ -245,13 +245,13 @@ function Home() {
                                     <div className="popular-card-header">
                                         <h4>{title}</h4>
                                         <div className="rating-location">
-                                            <p><b>8.5 - Excellent </b><br />(6216)</p>
-                                            <p>
-                                                <FontAwesomeIcon icon={['fas', 'fa-map-marker-alt']} />
+                                    <p><b>8.5 - Excellent </b><br />(6216)</p>
+                                    <p>
+                                        <FontAwesomeIcon icon={['fas', 'fa-map-marker-alt']} />
                                                 {location}
-                                            </p>
-                                        </div>
-                                    </div>
+                                    </p>
+                                </div>
+                            </div>
                                     {/* Hotel Owner Email */}
                                     <div style={{ fontSize: '0.95rem', color: '#666' }}>
                                         <b>Owner Email:</b> {hotel.owner_email || 'N/A'}
@@ -270,15 +270,15 @@ function Home() {
                                     <div className="popular-deal">
                                         <div className="details">
                                             <div className="details-head">
-                                                <p>Cheapest room</p>
-                                                <p>
-                                                    <span><FontAwesomeIcon icon={['fas', 'fa-check']} /></span>
-                                                    Free cancellation
-                                                </p>
-                                            </div>
+                                        <p>Cheapest room</p>
+                                        <p>
+                                            <span><FontAwesomeIcon icon={['fas', 'fa-check']} /></span> 
+                                            Free cancellation
+                                        </p>
+                                    </div>
                                             <div className="price-date">
                                                 <p><span>{minPrice !== 'N/A' ? `$${minPrice}` : 'N/A'}</span><br />per night</p>
-                                                <p><br />First 8 days after payment</p>
+                                        <p><br />First 8 days after payment</p>
                                             </div>
                                         </div>
                                         <button className="btn" onClick={() => navigate(`/website/preview/${hotel.id}`)}>Visit Website</button>
@@ -346,17 +346,17 @@ function Home() {
                                             style={{ width: '100px', height: '100px', objectFit: 'cover', marginTop: '10px', borderRadius: '50%' }}
                                         />
                                     )}
-                                </div>
+                            </div>
                                 <div className="form-group">
                                     <label style={{ fontWeight: 600, marginBottom: 4 }}>Rating (Required)</label>
                                     <StarRating value={stars} onChange={setStars} showValue={true} />
-                                </div>
+                        </div>
                                 <div className="form-group">
                                     <label style={{ fontWeight: 600, marginBottom: 4 }}>Comment (Optional)</label>
                                     <textarea value={comment} onChange={e => setComment(e.target.value)}
                                         placeholder="Share your experience..." rows={3}
                                         style={{ resize: 'vertical', borderRadius: 8, border: '1px solid #eee', padding: 12, fontSize: 16, background: '#fafbfc' }} />
-                                </div>
+                            </div>
                                 <button className="btn" type="submit" disabled={submitting}
                                     style={{ width: '100%' }}>
                                     {submitting ? 'Submitting...' : 'Submit Review'}
@@ -368,7 +368,7 @@ function Home() {
                                 <span>You must <a href="/login">login</a> or <a href="/signUp">register</a> to leave a review.</span>
                             </div>
                         )}
-                    </div>
+                        </div>
                     {/* Review Grid */}
                     {reviewLoading ? (
                         <div>Loading reviews...</div>
@@ -376,7 +376,7 @@ function Home() {
                         <div style={{ color: '#888', fontSize: '1.1rem', marginBottom: 16 }}>No reviews yet. Be the first to review!</div>
                     ) : (
                         <div className="client-grid">
-                            {reviews.slice(0, 6).map((review) => (
+                            {reviews.slice(0, 3).map((review) => (
                                 <div className="client-card" key={review.id} style={{ background: '#fff', borderRadius: 16, boxShadow: '0 2px 12px #0003', padding: 24, color: '#222' }}>
                                     {/* Card header: profile, name, date on left; stars on right */}
                                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
@@ -384,7 +384,7 @@ function Home() {
                                         <div style={{ flex: 1 }}>
                                             <div style={{ fontWeight: 600, fontSize: 17 }}>{review.username}</div>
                                             <div style={{ color: '#888', fontSize: 13 }}>{new Date(review.created_at).toLocaleDateString()}</div>
-                                        </div>
+                            </div>
                                         <div className="star" style={{ marginLeft: 12, minWidth: 100, textAlign: 'right' }}>
                                             {[...Array(5)].map((_, i) => (
                                                 <FontAwesomeIcon
@@ -393,12 +393,12 @@ function Home() {
                                                     style={{ color: i < review.stars ? '#FFC107' : '#e0e0e0', fontSize: 18 }}
                                                 />
                                             ))}
-                                        </div>
-                                    </div>
+                        </div>
+                            </div>
                                     <p style={{ minHeight: 48, color: '#444', marginBottom: 0 }}>{review.comment}</p>
                                     <div style={{ fontSize: '0.9em', color: '#888', marginTop: 8 }}>
                                         <span>{review.email}</span>
-                                    </div>
+                        </div>
                                     {token && userEmail === review.email && (
                                         <button className="btn" style={{ marginTop: 8, background: '#e74c3c', color: '#fff' }}
                                             disabled={deleteLoading === review.id}
@@ -415,7 +415,7 @@ function Home() {
                                             {deleteLoading === review.id ? 'Deleting...' : 'Delete'}
                                         </button>
                                     )}
-                                </div>
+                            </div>
                             ))}
                         </div>
                     )}
