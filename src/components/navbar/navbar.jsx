@@ -6,6 +6,7 @@ import './navbar.css'
 function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const isLoggedIn = typeof window !== 'undefined' && !!localStorage.getItem('token');
+    const userRole = typeof window !== 'undefined' ? localStorage.getItem('userRole') : null;
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
@@ -42,6 +43,7 @@ function Navbar() {
                 <ul id="nav-links" class={`nav-links ${isOpen ? 'open' : ''}`} onClick={closeMenu}>
                     <li class="link"><Link to="/" class="nav-link">Home</Link></li>
                     <li class="link"><Link to="/rooms" class="nav-link">Find Rooms</Link></li>
+                    {isLoggedIn && userRole === 'ADMIN' && <li class="link"><Link to="/dashboard" class="nav-link">Dashboard</Link></li>}
                     {!isLoggedIn && <li class="link"><Link to="/login" class="nav-link">Login</Link></li>}
                     {!isLoggedIn && <li class="link"><Link to="/signUp" class="nav-link">Sign Up</Link></li>}
                     {isLoggedIn && <li class="link"><button class="btn" onClick={logout}>

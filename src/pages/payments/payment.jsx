@@ -51,13 +51,21 @@ function PaymentForm() {
         setLoading(true);
         try {
             // 1. Create Payment object in backend
-            const paymentData = await createPayment({
-                amount: amount,
-                payment_type: paymentType,
-                plan_name: plan?.value,
-                hotel_id: hotelId,
-                reservation_id: reservationId,
-            });
+            let paymentPayload = {};
+            if (plan) {
+                paymentPayload = {
+                    hotel_id: hotelId,
+                    plan_name: plan?.value || plan.name // fallback to name if value is missing
+                };
+            } else if (reservationId) {
+                paymentPayload = {
+                    reservation_id: reservationId,
+                    hotel_id: hotelId,
+                    payment_type: 'reservation' // Ensure correct endpoint is used
+                };
+            }
+            console.log('Payment payload:', paymentPayload, 'Plan:', plan);
+            const paymentData = await createPayment(paymentPayload);
             const payment_id = paymentData.id;
 
             // 2. Call backend to create PaymentIntent and get clientSecret

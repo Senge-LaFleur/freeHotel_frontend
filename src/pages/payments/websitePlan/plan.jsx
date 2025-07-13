@@ -19,7 +19,7 @@ const plans = [
             "Limited analytics",
         ],
         button: "Choose Beginner Plan",
-        badge: "Free Forever",
+        badge: "Beginner Friendly",
         popular: false,
     },
     {

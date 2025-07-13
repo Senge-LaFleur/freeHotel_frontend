@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import GridViewIcon from '@mui/icons-material/GridView';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
@@ -61,10 +61,22 @@ function Sidebar({ isExpanded, toggleSidebar, isMobile }) {
                                     {isExpanded && <h3>Reservations</h3>}
                                 </NavLink>
                             </li>
+                            <li className="side-list">
+                                <NavLink to="/hotelSubscriptions" className={({ isActive }) => isActive ? 'side-link active' : 'side-link'}>
+                                    <span><FontAwesomeIcon icon={['fas', 'fa-credit-card']} /></span>
+                                    {isExpanded && <h3>Subscriptions</h3>}
+                                </NavLink>
+                            </li>
+                            <li className="side-list">
+                                <NavLink to="/hotelPlans" className={({ isActive }) => isActive ? 'side-link active' : 'side-link'}>
+                                    <span><FontAwesomeIcon icon={['fas', 'fa-crown']} /></span>
+                                    {isExpanded && <h3>Plans</h3>}
+                                </NavLink>
+                            </li>
                             <li class="side-list bottom" id="settings">
-                                <NavLink to="/dashboard" className={({ isActive }) => isActive ? 'side-link active' : 'side-link'}>
-                                    <span><FontAwesomeIcon icon={['fas', 'fa-cog']} /></span>
-                                    {isExpanded && <h3>Settings</h3>}
+                                <NavLink to="/" className={({ isActive }) => isActive ? 'side-link active' : 'side-link'}>
+                                    <span><FontAwesomeIcon icon={['fas', 'fa-home']} /></span>
+                                    {isExpanded && <h3>Back to Home</h3>}
                                 </NavLink>
                             </li>
                             <li class="side-list bottom" id="log-out">

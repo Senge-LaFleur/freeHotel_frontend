@@ -62,8 +62,8 @@ export default function ReviewPage() {
         <>
             <Navbar />
             <main style={{ minHeight: '70vh', background: '#fff', color: '#222', paddingTop: '5rem' }}>
-                <div style={{ maxWidth: 900, margin: '40px auto', padding: 24 }}>
-                    <button className="btn" style={{ marginBottom: 24 }} onClick={() => navigate('/')}>← Back to Home</button>
+        <div style={{ maxWidth: 900, margin: '40px auto', padding: 24 }}>
+            <button className="btn" style={{ marginBottom: 24 }} onClick={() => navigate('/')}>← Back to Home</button>
                     <h2 style={{ textAlign: 'center', fontWeight: 700, marginBottom: 32 }}>Ratings and reviews</h2>
                     {/* Review Statistics */}
                     <div style={{ display: 'flex', gap: 32, alignItems: 'center', marginBottom: 40, flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -171,15 +171,15 @@ export default function ReviewPage() {
                             </div>
                         )}
                     </div>
-                    {loading ? (
-                        <div>Loading reviews...</div>
-                    ) : error ? (
-                        <div style={{ color: 'red' }}>{error}</div>
-                    ) : reviews.length === 0 ? (
-                        <div style={{ color: '#888', fontSize: '1.1rem', marginBottom: 16 }}>No reviews yet.</div>
-                    ) : (
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 }}>
-                            {reviews.map((review) => (
+            {loading ? (
+                <div>Loading reviews...</div>
+            ) : error ? (
+                <div style={{ color: 'red' }}>{error}</div>
+            ) : reviews.length === 0 ? (
+                <div style={{ color: '#888', fontSize: '1.1rem', marginBottom: 16 }}>No reviews yet.</div>
+            ) : (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 }}>
+                    {reviews.map((review) => (
                                 <div className="client-card" key={review.id} style={{ background: '#fff', borderRadius: 16, boxShadow: '0 2px 12px #0003', padding: 24, color: '#222' }}>
                                     {/* Card header: profile, name, date on left; stars on right */}
                                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
@@ -189,14 +189,14 @@ export default function ReviewPage() {
                                             <div style={{ color: '#888', fontSize: 13 }}>{new Date(review.created_at).toLocaleDateString()}</div>
                                         </div>
                                         <div className="star" style={{ marginLeft: 12, minWidth: 100, textAlign: 'right' }}>
-                                            {[...Array(5)].map((_, i) => (
-                                                <FontAwesomeIcon
-                                                    key={i}
-                                                    icon={['fas', 'fa-star']}
+                                {[...Array(5)].map((_, i) => (
+                                    <FontAwesomeIcon
+                                        key={i}
+                                        icon={['fas', 'fa-star']}
                                                     style={{ color: i < review.stars ? '#FFC107' : '#e0e0e0', fontSize: 18 }}
-                                                />
-                                            ))}
-                                        </div>
+                                    />
+                                ))}
+                            </div>
                                     </div>
                                     <p style={{ minHeight: 48, color: '#444', marginBottom: 0 }}>{review.comment}</p>
                                     {/* Was this review helpful? UI only */}
@@ -204,28 +204,28 @@ export default function ReviewPage() {
                                         Was this review helpful?
                                         <button className="btn" style={{ background: '#f0f0f0', color: '#222', borderRadius: 6, padding: '2px 14px', marginLeft: 8, fontSize: 14, border: '1px solid #e0e0e0' }}>Yes</button>
                                         <button className="btn" style={{ background: '#f0f0f0', color: '#222', borderRadius: 6, padding: '2px 14px', fontSize: 14, border: '1px solid #e0e0e0' }}>No</button>
-                                    </div>
-                                    {token && userEmail === review.email && (
+                            </div>
+                            {token && userEmail === review.email && (
                                         <button className="btn" style={{ marginTop: 12, background: '#e74c3c', color: '#fff' }}
-                                            disabled={deleteLoading === review.id}
-                                            onClick={async () => {
-                                                setDeleteLoading(review.id);
-                                                try {
-                                                    await deleteReview(review.id, token);
-                                                    setReviews(reviews.filter(r => r.id !== review.id));
-                                                } catch {
-                                                    alert('Failed to delete review.');
-                                                }
-                                                setDeleteLoading(null);
-                                            }}>
-                                            {deleteLoading === review.id ? 'Deleting...' : 'Delete'}
-                                        </button>
-                                    )}
-                                </div>
-                            ))}
+                                    disabled={deleteLoading === review.id}
+                                    onClick={async () => {
+                                        setDeleteLoading(review.id);
+                                        try {
+                                            await deleteReview(review.id, token);
+                                            setReviews(reviews.filter(r => r.id !== review.id));
+                                        } catch {
+                                            alert('Failed to delete review.');
+                                        }
+                                        setDeleteLoading(null);
+                                    }}>
+                                    {deleteLoading === review.id ? 'Deleting...' : 'Delete'}
+                                </button>
+                            )}
                         </div>
-                    )}
+                    ))}
                 </div>
+            )}
+        </div>
             </main>
             <Footer />
         </>
