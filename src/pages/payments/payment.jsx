@@ -21,6 +21,7 @@ function PaymentForm() {
     const reservationAmount = location.state?.amount;
     const reservationClientName = location.state?.client_name;
     const reservationClientEmail = location.state?.client_email;
+    const returnTo = location.state?.returnTo || '/dashboard';
     // Pre-fill from localStorage or reservation
     const [fullName, setFullName] = useState(reservationClientName || localStorage.getItem('name') || '');
     const [email, setEmail] = useState(reservationClientEmail || localStorage.getItem('userEmail') || '');
@@ -96,7 +97,7 @@ function PaymentForm() {
                     await updateReservationStatus(reservationId, 'SUCCESS', localStorage.getItem('token'));
                 }
                 setTimeout(() => {
-                    navigate('/dashboard');
+                    navigate(returnTo);
                 }, 2000);
             } else {
                 setError('Payment failed.');

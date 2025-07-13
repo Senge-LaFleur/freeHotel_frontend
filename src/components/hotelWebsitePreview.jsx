@@ -151,6 +151,7 @@ export default function HotelWebsitePreview({
           client_name: reservationForm.client_name,
           client_email: reservationForm.client_email,
           room: reservationModal.room,
+          returnTo: window.location.pathname
         }
       });
       setBookingSuccess(true);

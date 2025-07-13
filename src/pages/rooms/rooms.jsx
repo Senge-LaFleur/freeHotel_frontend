@@ -282,6 +282,7 @@ function Rooms() {
           client_name: reservationForm.client_name,
           client_email: reservationForm.client_email,
           room,
+          returnTo: location.pathname
         }
       });
       setReservedRoomIds(ids => [...ids, room.id]);
