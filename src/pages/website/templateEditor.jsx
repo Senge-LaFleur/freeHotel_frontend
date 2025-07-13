@@ -113,10 +113,11 @@ export default function TemplateEditor() {
         price: ['under99', '99-199', '199-299'],
         beds: ['1', '2'],
     });
-    const [rooms, setRooms] = useState([
-        { image: null, name: 'Standard Room', desc: 'A cozy room for two.', price: 89 },
-        { image: null, name: 'Deluxe Room', desc: 'Spacious room with a view.', price: 159 },
-    ]);
+    // const [rooms, setRooms] = useState([
+    //     { image: null, name: 'Standard Room', desc: 'A cozy room for two.', price: 89 },
+    //     { image: null, name: 'Deluxe Room', desc: 'Spacious room with a view.', price: 159 },
+    // ]);
+    const [rooms, setRooms] = useState([]);
     const [editingRoom, setEditingRoom] = useState(null);
     const [newRoom, setNewRoom] = useState({
         room_number: '',
