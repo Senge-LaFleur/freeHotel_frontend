@@ -136,7 +136,7 @@ export default function TemplateEditor() {
     const [footerLogo, setFooterLogo] = useState('');
     const [footerName, setFooterName] = useState('LOGO TEXT HERE');
     const [footerSlogan, setFooterSlogan] = useState('SLOGAN HERE');
-    const [footerLinks, setFooterLinks] = useState(['Home', 'About', 'Contact']);
+    const [footerLinks, setFooterLinks] = useState(['Home', 'Book Now']);
     const [footerContacts, setFooterContacts] = useState([
         { type: 'email', value: 'info@hotel.com' },
         { type: 'phone', value: '+1234567890' },
