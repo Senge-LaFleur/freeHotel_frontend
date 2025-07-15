@@ -208,6 +208,7 @@ function Home() {
                             gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
                             gap: '1.5rem',
                             overflowX: 'auto',
+                            paddingTop: 8,
                             paddingBottom: 8,
                             paddingLeft: 4,
                             paddingRight: 4,
