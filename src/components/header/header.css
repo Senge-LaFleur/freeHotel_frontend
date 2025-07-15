@@ -19,8 +19,8 @@
     position: relative;
     top: 70px;
     min-height: 500px;
-    background-image: linear-gradient(to right, rgba(0,0,0,0.4), rgba(0,0,0,0)),
-        url('../../assets/images/outside14.jpg');
+    background-image: 
+        url('../../assets/images/outside10.jpg');
     background-position: center center;
     background-size: cover;
     background-repeat: no-repeat;
