@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './login.css'
 
@@ -7,6 +7,7 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -28,7 +29,9 @@ const Login = () => {
             if (data.user && data.user.is_hotel_owner) {
                 navigate('/dashboard');
             } else {
-                navigate('/rooms');
+                // Redirect client to previous page or /rooms
+                const from = location.state?.from || '/';
+                navigate(from, { replace: true });
             }
         } else {
             alert('Login failed: ' + (data.detail || 'Unknown error'));
